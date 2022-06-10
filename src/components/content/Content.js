@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import {
   Container,
@@ -19,40 +19,96 @@ import {
 } from "./FilterPanelStyles"
 import { Button } from "../../styles/buttons"
 import { statusTypes } from "../../data/constants"
-import { data } from "../../data/data.js"
-
 import {
   InvBucketContainer,
   InvBucketItem,
-  ItemId,
   ItemDate,
-  ItemIdHash,
   ItemSender,
   ItemPrice,
+  ItemBtnInfo,
+  EmptyInvoiceBucket,
+  EmptyInvoiceImg,
+  EmptyInvoiceTextCont,
+  EmptyInvoiceTitle,
+  EmptyInvoiceText,
+  EmptyInvoiceSpan,
+} from "./InvoiceBucketStyles"
+import data from "../../data/data.json"
+import { transformDate } from "../../helpers/dateFormatter"
+import { useSelector, useDispatch } from "react-redux"
+import { formatMoney } from "../../helpers/moneyFormatter"
+
+import {
   ItemStatus,
   ItemStatusCircle,
   ItemStatusTitle,
-  ItemBtnInfo,
-} from "./InvoiceBucketStyles"
+  ItemId,
+  ItemIdHash,
+} from "../../styles/repeatables"
+import { newInvoice } from "../../store/slices/modalSlice"
+import { setCurrInvoice, setId } from "../../store/slices/dataSlice"
 
-import { transformDate } from "../../helpers/dateFormatter"
+// export const getStaticProps = async (context) => {
+//   // const invoices = await import("../../data/data.json")
+//   console.log(context)
+//   return {
+//     props: {
+//       invoices: data,
+//     },
+//   }
+// }
 
-function Content() {
+const Content = (props) => {
   const [isOpened, setIsOpened] = useState(false)
+  const statuses = useSelector((state) => state.statusToggle.value)
+  const dispatch = useDispatch()
+  const [invoiceList, setInvoceList] = useState(data)
 
-  const [checkedState, setCheckedStates] = useState(
-    new Array(statusTypes.length).fill(false)
-  )
+  useEffect(() => {
+    if (invoiceList.length > 20) {
+      return
+    } else {
+      localStorage.setItem("invoices", JSON.stringify(invoiceList))
+    }
+  }, [invoiceList])
+
+  const [checkedState, setCheckedStates] = useState(statusTypes)
 
   const toggleDiv = () => {
     setIsOpened((wasOpened) => !wasOpened)
   }
 
-  const handleCheckBox = (num) => {
-    const updatedCheckedState = checkedState.map((item, index) =>
-      index === num ? !item : item
-    )
+  const chooseInvoice = (id) => {
+    dispatch(setId(id))
+    dispatch(setCurrInvoice())
+  }
+  // const checkEmptyInvoices = (currentList) => {
+  //   currentList.map((item, index) => {
+  //     if (!item[("id", "clienName", "paymentDue")]) {
+  //       console.log(item)
+  //     } else if (Object.values(item).some((value) => !value)) {
+  //       item.status = "draft"
+  //     }
+  //   })
+  // }
+
+  const test = () => {
+    console.log(typeof invoiceList[0], invoiceList[0])
+    let filteredInvoices = []
+  }
+
+  const handleCheckBox = (name) => {
+    const updatedCheckedState = checkedState.map((item, index) => {
+      const keyName = Object.keys(item)[0]
+      if (name === keyName) {
+        item[name] = !item[name]
+      }
+
+      return item
+    })
+
     setCheckedStates(updatedCheckedState)
+    test()
   }
 
   return (
@@ -61,38 +117,41 @@ function Content() {
         <InvTitleWrap>
           <InvTitle>Invoices</InvTitle>
           <InvSpan>
-            {data.length > 0 ? `${data.length} invoices` : `No Invoices`}
+            {invoiceList.length > 0
+              ? `${invoiceList.length} invoices`
+              : `No Invoices`}
           </InvSpan>
         </InvTitleWrap>
         <InvButtonsContainer>
           <InvStatusSpan onClick={toggleDiv}>
             Filter by status
-            <ArrowImg isOpen={isOpened} src={"./assets/icon-arrow-down.svg"} />
+            <ArrowImg isOpen={isOpened} src={"/assets/icon-arrow-down.svg"} />
           </InvStatusSpan>
           {isOpened && (
             <InvBoxChecks>
-              {statusTypes.map((type, index) => {
+              {checkedState.map((item, index) => {
+                const stName = Object.keys(item)[0]
                 return (
                   <InvCheckBoxPair key={index}>
                     <InvCheckBoxCont
-                      onClick={() => handleCheckBox(index)}
-                      Checked={checkedState[index]}
-                      id={type[index]}
+                      onClick={() => handleCheckBox(stName)}
+                      Checked={item[stName]}
+                      id={stName}
                     >
                       <InvCheckBoxIcon
-                        Checked={checkedState[index]}
-                        src={"./assets/icon-check.svg"}
+                        Checked={item[stName]}
+                        src={"/assets/icon-check.svg"}
                       />
                     </InvCheckBoxCont>
-                    <InvCheckBoxSpan>{type}</InvCheckBoxSpan>
+                    <InvCheckBoxSpan>{stName}</InvCheckBoxSpan>
                   </InvCheckBoxPair>
                 )
               })}
             </InvBoxChecks>
           )}
-          <Button purple>
+          <Button onClick={() => dispatch(newInvoice(true))} newInvoice>
             <PlusDiv>
-              <PlusIcon src={"./assets/icon-plus.svg"} />
+              <PlusIcon src={"/assets/icon-plus.svg"} />
             </PlusDiv>
             New Invoice
           </Button>
@@ -100,26 +159,51 @@ function Content() {
       </InvFilterContainer>
 
       <InvBucketContainer>
-        {data.map((item, index) => (
-          <InvBucketItem key={index}>
-            <ItemId>
-              <ItemIdHash>#</ItemIdHash>
-              {item.id}
-            </ItemId>
-            <ItemDate>{transformDate(item.paymentDue)}</ItemDate>
-            <ItemSender>{item.clientName}</ItemSender>
-            <ItemPrice>
-              $ {item.total?.toFixed(2).toLocaleString("en-US")}
-            </ItemPrice>
-            <ItemStatus _STATUS={item.status}>
-              <ItemStatusCircle />
-              <ItemStatusTitle>{item.status}</ItemStatusTitle>
-            </ItemStatus>
-            <ItemBtnInfo>
-              <ArrowImg isLink src={"./assets/icon-arrow-right.svg"} />
-            </ItemBtnInfo>
-          </InvBucketItem>
-        ))}
+        {invoiceList.length > 0 ? (
+          invoiceList.map((item, index) =>
+            item[("id", "paymentDue", "clientName")] == undefined || null ? (
+              ""
+            ) : (
+              <Link
+                href={{
+                  pathname: `/invoice/${encodeURIComponent(item.id)}`,
+                }}
+                key={index}
+              >
+                <InvBucketItem onClick={() => chooseInvoice(item.id)}>
+                  <ItemId>
+                    <ItemIdHash>#</ItemIdHash>
+                    {item.id}
+                  </ItemId>
+                  <ItemDate>Due {transformDate(item.paymentDue)}</ItemDate>
+                  <ItemSender>{item.clientName}</ItemSender>
+                  <ItemPrice>
+                    {item.total ? `$ ${formatMoney(item.total)}` : ""}
+                  </ItemPrice>
+                  <ItemStatus mainPage _STATUS={item.status}>
+                    <ItemStatusCircle />
+                    <ItemStatusTitle>{item.status}</ItemStatusTitle>
+                  </ItemStatus>
+                  <ItemBtnInfo>
+                    <ArrowImg isLink src={"/assets/icon-arrow-right.svg"} />
+                  </ItemBtnInfo>
+                </InvBucketItem>
+              </Link>
+            )
+          )
+        ) : (
+          <EmptyInvoiceBucket>
+            <EmptyInvoiceImg src={"/assets/illustration-empty.svg"} />
+            <EmptyInvoiceTextCont>
+              <EmptyInvoiceTitle>There is nothing here</EmptyInvoiceTitle>
+              <EmptyInvoiceText>
+                Create an invoice by clicking the
+                <EmptyInvoiceSpan> New Invoice </EmptyInvoiceSpan> button and
+                get started
+              </EmptyInvoiceText>
+            </EmptyInvoiceTextCont>
+          </EmptyInvoiceBucket>
+        )}
       </InvBucketContainer>
     </Container>
   )

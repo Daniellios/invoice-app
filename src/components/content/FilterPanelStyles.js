@@ -7,7 +7,12 @@ export const Container = styled.div`
   flex-direction: column;
   row-gap: 3rem;
   margin: 2rem auto 0 auto;
+  align-self: flex-start;
+  justify-self: center;
+  height: 707px;
+  position: relative;
 
+  pointer-events: auto;
   @media ${(props) => props.theme.breakpoints.md} {
     width: 672px;
   }
@@ -22,8 +27,8 @@ export const InvFilterContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  justify-self: flex-start;
   height: 59px;
-
   @media ${(props) => props.theme.breakpoints.mmd} {
     height: 44px;
   }
@@ -57,8 +62,27 @@ export const InvButtonsContainer = styled.div`
 
 export const InvStatusSpan = styled.span`
   font-weight: 600;
+  user-select: none;
   &:hover {
     cursor: pointer;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 32%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0.7rem;
+    left: 0;
+    background-color: ${(props) => props.theme.darkPurple};
+    transform-origin: bottom right;
+    transition: transform 0.1s linear;
+  }
+
+  &:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
   }
 `
 
@@ -68,7 +92,7 @@ export const InvBoxChecks = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
-  z-index: 3;
+  z-index: 10;
   align-items: start;
   justify-content: center;
   background: ${(props) => props.theme.invoiceBg};
@@ -76,6 +100,7 @@ export const InvBoxChecks = styled.div`
   width: 192px;
   height: 128px;
   padding-left: 1.5rem;
+  user-select: none;
   ${(props) =>
     useSelector((state) => state.themeToggle.value)
       ? `

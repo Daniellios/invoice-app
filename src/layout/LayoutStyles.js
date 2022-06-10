@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux"
 import styled from "styled-components"
 
 export const Container = styled.main`
@@ -14,6 +15,19 @@ export const Container = styled.main`
   width: 100vw;
   height: 100vh;
   margin: auto;
+  overflow-x: hidden;
+
+  ${(props) =>
+    useSelector((state) => state.createInvoice.isOpen)
+      ? ` &:after {
+  width: 100%;
+  content: " ";
+  height: 100%;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);} `
+      : ` &:after {
+        pointer-events: none;
+    }`}
 
   @media ${(props) => props.theme.breakpoints.md} {
     grid-template-areas:

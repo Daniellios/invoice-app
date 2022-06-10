@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import {
   Container,
   SquareWrap,
@@ -15,14 +15,18 @@ import {
 import { useSelector, useDispatch } from "react-redux"
 import { toggle } from "../../store/slices/themeSwitch"
 
-const Header = () => {
+const Header = (props) => {
   const theme = useSelector((state) => state.themeToggle.value)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    localStorage.setItem("theme", JSON.stringify(theme))
+  }, [])
 
   return (
     <Container>
       <SquareWrap>
-        <SquareLogo src={"./assets/logo.svg"} />
+        <SquareLogo src={"/assets/logo.svg"} />
         <SquareUp />
         <SquareDown />
       </SquareWrap>
@@ -32,18 +36,18 @@ const Header = () => {
             {theme ? (
               <MoonIcon
                 onClick={() => dispatch(toggle())}
-                src={"./assets/icon-moon.svg"}
+                src={"/assets/icon-moon.svg"}
               />
             ) : (
               <MoonIcon
                 onClick={() => dispatch(toggle())}
-                src={"./assets/icon-sun.svg"}
+                src={"/assets/icon-sun.svg"}
               />
             )}
           </ThemeSwither>
         </SwitchContainer>
         <ProfileContainer>
-          <ProfilePic src={"./assets/profile2.jpg"} />
+          <ProfilePic src={"/assets/profile2.jpg"} />
         </ProfileContainer>
       </ProfileWrap>
     </Container>

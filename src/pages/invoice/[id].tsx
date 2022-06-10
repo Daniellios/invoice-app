@@ -1,0 +1,20 @@
+import { useRouter } from "next/router"
+import React, { FunctionComponent } from "react"
+import Layout from "../../layout/Layout"
+
+import { NextPage } from "next"
+
+import Invoice from "../../components/invoiceinfo/Invoice"
+
+const InvoicePage: NextPage = () => {
+  const router = useRouter()
+  const data = router.query
+
+  return (
+    <Layout>
+      <Invoice id={data.id}></Invoice>
+    </Layout>
+  )
+}
+
+export default InvoicePage

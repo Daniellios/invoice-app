@@ -14,6 +14,7 @@ export const themeSlice = createSlice({
   reducers: {
     toggle: (state, action) => {
       state.value === 1 ? (state.value = 0) : (state.value = 1)
+      localStorage.setItem("theme", JSON.stringify(state.value))
     },
   },
 })

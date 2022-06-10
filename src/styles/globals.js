@@ -16,10 +16,11 @@ const GlobalStyles = createGlobalStyle`
     color: ${(props) => props.theme.mainText};
     cursor: default;
     transition: all 0.40s linear;
+    transition-property: color, background, box-shadow;
   }
   div{
-    transition:all 0.40s linear;
-    transition-property: color, background, box-shadow;
+    // transition:all 0.40s linear;
+
   }
   h1,h2,h3,h4,h5,h6,button {
     font-family: ${(props) => props.theme.fonts.title};
@@ -58,14 +59,15 @@ const GlobalStyles = createGlobalStyle`
   button{
     display: flex;
     justify-content: center;
+    text-align: center;
     align-items: center;
     outline: none;
     font-size: 12px;
     border: transparent;
-    border-radius: 50px;
+    border-radius: 40px;
     font-weight: 600;
     height: 3rem;
-    padding: 0 .8rem 0 .5rem;
+    padding: 0 1.3rem 0 1.3rem;
     column-gap: 1rem;
     height: 44px;
     &:hover{
@@ -74,6 +76,7 @@ const GlobalStyles = createGlobalStyle`
 
     @media ${(props) => props.theme.breakpoints.mmd} {
       column-gap: .4rem;
+      padding: 0 .8rem 0 .8rem;
     }
   }
 
@@ -86,9 +89,10 @@ const GlobalStyles = createGlobalStyle`
   }
 
   span{
-    font-family: ${(props) => props.theme.mainText};
+    font-family: ${(props) => props.theme.fonts.title};
     font-size: 15px;
     letter-spacing: -.25px;
+    transition: all 0s ;
   }
 
 `

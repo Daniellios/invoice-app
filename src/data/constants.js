@@ -1,1 +1,5 @@
-export const statusTypes = ["draft", "pending", "paid"]
+export const statusTypes = [
+  { draft: false },
+  { pending: false },
+  { paid: false },
+]
