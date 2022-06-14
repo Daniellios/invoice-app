@@ -166,20 +166,6 @@ export const InvCheckBoxIcon = styled.img`
   opacity: ${(props) => (props.Checked ? "1" : "0")};
 `
 
-export const ArrowImg = styled.img`
-  transform: rotate(${(props) => (props.isOpen ? "180" : "0")}deg);
-  margin-left: 0.5rem;
-  ${(props) => {
-    if (props.isLink) {
-      return `
-        &:hover{
-          cursor: pointer;
-        }
-      `
-    }
-  }}
-`
-
 export const PlusDiv = styled.div`
   display: flex;
   align-items: center;

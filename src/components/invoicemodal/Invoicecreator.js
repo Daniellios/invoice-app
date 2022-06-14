@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 import {
   Modal,
@@ -14,34 +14,88 @@ import {
   TotalSumCell,
   AddItem,
   ModalFooter,
+  ModalRow,
 } from "./InvoiceModalStyles"
-import { BiTrash } from "react-icons/bi"
 import { formatMoney } from "../../helpers/moneyFormatter"
 import { Button } from "../../styles/buttons"
 import { useDispatch, useSelector } from "react-redux"
-import { newInvoice } from "../../store/slices/modalSlice"
+import { openModal } from "../../store/slices/modalSlice"
 import { randomIdGenerator } from "../../helpers/idGenerator"
 import { ItemIdHash } from "../../styles/repeatables"
 import { useRouter } from "next/router"
+import Dropdown from "../dropdownterms/Dropdown"
+
+import InvoiceItem from "./InvoiceItem"
+import { resetCurrInvoice } from "../../store/slices/dataSlice"
+
+// Close modal with outside click
+let useClickOutside = (handler) => {
+  let modalRef = useRef()
+
+  useEffect(() => {
+    let modalHandler = (event) => {
+      if (!modalRef.current.contains(event.target)) handler()
+    }
+    document.addEventListener("mousedown", modalHandler)
+
+    return () => {
+      document.removeEventListener("mousedown", modalHandler)
+    }
+  }, [])
+
+  return modalRef
+}
 
 const Invoicecreator = () => {
-  const modal = useSelector((state) => state.createInvoice.isOpen)
-  const invoiceData = useSelector((state) => state.currData)
+  const modalIsOpen = useSelector((state) => state.modalInvoice.isOpen)
   const dispatch = useDispatch()
   const router = useRouter()
+  const [invoice, setCurrInvoice] = useState(
+    useSelector((state) => state.currData.currInvoice)
+  )
+  const [itemList, setItemList] = useState(fillItemList())
+
   const [modalType, setModalType] = useState("NEW")
 
-  console.log(invoiceData)
-
-  const test = () => {
-    if (router.pathname === "/") return
-    if (router.pathname === "/invoice/[id]") setModalType("EDIT")
+  const removeItem = (itemNumber) => {
+    const newList = itemList.filter((item, index) => index !== itemNumber)
+    setItemList(newList)
   }
 
+  function fillItemList() {
+    if (invoice === null) {
+      return []
+    } else {
+      return invoice.items
+    }
+  }
+
+  const addNewItem = () => {
+    setItemList(itemList.concat({}))
+  }
+
+  /// Set EDIT modal type or NEW one
+  useEffect(() => {
+    dispatch(openModal(false))
+    if (router.pathname === "/") {
+      dispatch(resetCurrInvoice())
+      setItemList([])
+      setModalType("NEW")
+    } else if (router.pathname === "/invoice/[id]") {
+      setModalType("EDIT")
+    }
+  }, [router.pathname])
+
+  let domNode = useClickOutside(() => {
+    dispatch(openModal(false))
+  })
+
   return (
-    <Modal type={modalType} isOpen={modal}>
+    <Modal isOpen={modalIsOpen} ref={domNode}>
       <ModalContent>
-        <ModalTitle>New Invoice</ModalTitle>
+        <ModalTitle>
+          {modalType === "NEW" ? `New Invoice` : `Edit #${invoice.id}`}
+        </ModalTitle>
         {/* Bill FROM  */}
         <ModalBlock billFrom key={"bf"}>
           <ModalBlockTitle>Bill From</ModalBlockTitle>
@@ -110,7 +164,7 @@ const Invoicecreator = () => {
           <ModalInputWrap gridArea={"term"}>
             <ModalInputTitle>Payment terms</ModalInputTitle>
             <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
+            <Dropdown value={30} />
           </ModalInputWrap>
           <ModalInputWrap gridArea={"pd"}>
             <ModalInputTitle>Project Description</ModalInputTitle>
@@ -121,24 +175,31 @@ const Invoicecreator = () => {
         {/* ITEMS */}
         <ModalBlock list={"true"} key={"itms"}>
           <ItemListTitle>Item List</ItemListTitle>
-          <ModalInputTitle area={"2/1/2/2"}>Item name</ModalInputTitle>
-          <ModalInputTitle area={"2/4/2/4"}>QTY</ModalInputTitle>
-          <ModalInputTitle area={"2/5/2/5"}>Price</ModalInputTitle>
-          <ModalInputTitle area={"2/6/2/6"}>Total</ModalInputTitle>
-          <ModalInput area={"3/1/3/4"}></ModalInput>
-          <ModalInput area={"3/4/3/5"}></ModalInput>
-          <ModalInput area={"3/5/3/6"}></ModalInput>
-          <TotalSumCell area={"3/6/3/7"}>
-            {formatMoney(5000)}
-            <BiTrash
-              style={{ width: "16px", height: "16px", cursor: "pointer" }}
-            />
-          </TotalSumCell>
-          <AddItem area={"auto/1/auto/7"}>+ Add New Item</AddItem>
+          <ModalRow>
+            <ModalInputTitle area={"1/1/1/2"}>Item name</ModalInputTitle>
+            <ModalInputTitle area={"1/4/1/4"}>QTY</ModalInputTitle>
+            <ModalInputTitle area={"1/5/1/5"}>Price</ModalInputTitle>
+            <ModalInputTitle area={"1/6/1/6"}>Total</ModalInputTitle>
+          </ModalRow>
+          {itemList
+            ? itemList.map((item, index) => {
+                return (
+                  <InvoiceItem
+                    itemInfo={item}
+                    onRemove={removeItem}
+                    key={index}
+                    number={index}
+                  ></InvoiceItem>
+                )
+              })
+            : ""}
+          <AddItem onClick={addNewItem} area={"auto/1/auto/7"}>
+            + Add New Item
+          </AddItem>
         </ModalBlock>
       </ModalContent>
       <ModalFooter>
-        <Button onClick={() => dispatch(newInvoice(false))} basicWhite>
+        <Button onClick={() => dispatch(openModal(false))} basicWhite>
           Discard
         </Button>
         <Button darkgray>Save as Draft</Button>

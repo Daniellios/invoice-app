@@ -6,6 +6,8 @@ import { ThemeState } from "../store/slices/themeSwitch"
 interface Props {
   _STATUS?: string
   mainPage?: boolean
+  isOpen?: string
+  isLink?: boolean
 }
 
 export const ItemStatus = styled.div<Props>`
@@ -113,4 +115,18 @@ export const ItemId = styled.p`
 export const ItemIdHash = styled.span`
   font-size: 1rem;
   color: ${(props) => props.theme.hash};
+`
+
+export const ArrowImg = styled.img<Props>`
+  transform: rotate(${(props) => (props.isOpen ? "180" : "0")}deg);
+  margin-left: 0.5rem;
+  ${(props) => {
+    if (props.isLink) {
+      return `
+        &:hover{
+          cursor: pointer;
+        }
+      `
+    }
+  }}
 `

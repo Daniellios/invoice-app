@@ -44,19 +44,21 @@ import { transformDate } from "../../helpers/dateFormatter"
 import { getTotal } from "../../helpers/getTotalSum"
 import { useDispatch, useSelector } from "react-redux"
 import { resetCurrInvoice } from "../../store/slices/dataSlice"
-import { newInvoice } from "../../store/slices/modalSlice"
+import { openModal } from "../../store/slices/modalSlice"
 
 const Invoice = (props) => {
   const dispatch = useDispatch()
-  const invoice = useSelector((state) => state.currData.currInvoice)
+  const invoice = useSelector((state) => state.currData?.currInvoice)
 
   const router = useRouter()
   const goBack = () => {
     router.back()
   }
 
+  // console.log(useSelector((state) => state.currData.currInvoice))
+
   const editInvoice = () => {
-    dispatch(newInvoice(true))
+    dispatch(openModal(true))
   }
 
   return (

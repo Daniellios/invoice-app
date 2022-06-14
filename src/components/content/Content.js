@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/router"
 import Link from "next/link"
 import {
   Container,
@@ -8,7 +9,6 @@ import {
   InvTitleWrap,
   InvButtonsContainer,
   InvStatusSpan,
-  ArrowImg,
   InvBoxChecks,
   InvCheckBoxPair,
   InvCheckBoxSpan,
@@ -33,7 +33,6 @@ import {
   EmptyInvoiceText,
   EmptyInvoiceSpan,
 } from "./InvoiceBucketStyles"
-import data from "../../data/data.json"
 import { transformDate } from "../../helpers/dateFormatter"
 import { useSelector, useDispatch } from "react-redux"
 import { formatMoney } from "../../helpers/moneyFormatter"
@@ -44,57 +43,33 @@ import {
   ItemStatusTitle,
   ItemId,
   ItemIdHash,
+  ArrowImg,
 } from "../../styles/repeatables"
-import { newInvoice } from "../../store/slices/modalSlice"
+import { openModal } from "../../store/slices/modalSlice"
 import { setCurrInvoice, setId } from "../../store/slices/dataSlice"
-
-// export const getStaticProps = async (context) => {
-//   // const invoices = await import("../../data/data.json")
-//   console.log(context)
-//   return {
-//     props: {
-//       invoices: data,
-//     },
-//   }
-// }
 
 const Content = (props) => {
   const [isOpened, setIsOpened] = useState(false)
-  const statuses = useSelector((state) => state.statusToggle.value)
   const dispatch = useDispatch()
-  const [invoiceList, setInvoceList] = useState(data)
+  const [invoiceList, setInvoceList] = useState(
+    useSelector((state) => state.currData.invoices)
+  )
 
   useEffect(() => {
-    if (invoiceList.length > 20) {
-      return
-    } else {
-      localStorage.setItem("invoices", JSON.stringify(invoiceList))
-    }
+    if (invoiceList.length > 100) return
+    localStorage.setItem("invoices", JSON.stringify(invoiceList))
   }, [invoiceList])
 
   const [checkedState, setCheckedStates] = useState(statusTypes)
 
   const toggleDiv = () => {
+    // localStorage.clear()
     setIsOpened((wasOpened) => !wasOpened)
   }
 
   const chooseInvoice = (id) => {
     dispatch(setId(id))
     dispatch(setCurrInvoice())
-  }
-  // const checkEmptyInvoices = (currentList) => {
-  //   currentList.map((item, index) => {
-  //     if (!item[("id", "clienName", "paymentDue")]) {
-  //       console.log(item)
-  //     } else if (Object.values(item).some((value) => !value)) {
-  //       item.status = "draft"
-  //     }
-  //   })
-  // }
-
-  const test = () => {
-    console.log(typeof invoiceList[0], invoiceList[0])
-    let filteredInvoices = []
   }
 
   const handleCheckBox = (name) => {
@@ -108,7 +83,6 @@ const Content = (props) => {
     })
 
     setCheckedStates(updatedCheckedState)
-    test()
   }
 
   return (
@@ -149,7 +123,7 @@ const Content = (props) => {
               })}
             </InvBoxChecks>
           )}
-          <Button onClick={() => dispatch(newInvoice(true))} newInvoice>
+          <Button onClick={() => dispatch(openModal(true))} newInvoice>
             <PlusDiv>
               <PlusIcon src={"/assets/icon-plus.svg"} />
             </PlusDiv>

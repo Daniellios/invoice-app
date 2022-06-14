@@ -10,12 +10,11 @@ export const Modal = styled.div`
   flex-direction: column;
   row-gap: 2rem;
   background: ${(props) => props.theme.modal};
-  border: 1px solid purple;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
   padding: 3.4375rem 3.4375rem 2rem 9.875rem;
   overflow-y: scroll;
-  transition: translate 0.4s ease-out;
+  transition: transform 0.3s ease-out;
   transform: ${(props) =>
     props.isOpen ? "translateX(0%)" : "translateX(-100%)"};
 `
@@ -74,13 +73,35 @@ export const ModalBlock = styled.div`
     `
     } else if (props.list) {
       return `
-    grid-template-columns: 1fr 40px 40px 46px 100px 1fr;
-    grid-template-rows: auto;
-    grid-column-gap: 1rem;
-    grid-row-gap: 1.4rem;
+      grid-template-columns: 1fr ;
+      grid-template-rows: auto;
+      row-gap: 1rem;
+      // grid-column-gap: 1rem;
+      // grid-row-gap: 1.4rem;
+    // grid-template-columns: 1fr 40px 40px 46px 100px 1fr;
+    // grid-template-rows: auto;
+    // grid-column-gap: 1rem;
+    // grid-row-gap: 1.4rem;
     `
     }
   }}
+`
+
+export const ModalRow = styled.div`
+  grid-area: auto/1/auto/1;
+  grid-template-columns: 1fr 40px 40px 46px 100px 1fr;
+  width: 100%;
+  align-content: flex-end;
+  justify-content: flex-end;
+  display: grid;
+  grid-row-gap: 1rem;
+  grid-column-gap: 1rem;
+`
+
+export const RowCell = styled.div`
+  width: 100%;
+  display: flex;
+  grid-area: ${(props) => props.gridArea};
 `
 
 export const ModalBlockTitle = styled.p`
@@ -91,6 +112,7 @@ export const ModalBlockTitle = styled.p`
 `
 
 export const ItemListTitle = styled.h2`
+  grid-area: 1/1/1/1;
   font-size: 18px;
   color: ${(props) => props.theme.subText2};
 `
@@ -153,6 +175,7 @@ export const ModalInput = styled.input`
   background: ${(props) => props.theme.input};
   color: ${(props) => props.theme.mainText};
   border: 1px solid ${(props) => rgba(props.theme.checkBg, 0.05)};
+  font-family: ${(props) => props.theme.fonts.title};
   padding-left: 1rem;
   padding-right: 1rem;
   border-radius: 3px;
@@ -177,6 +200,7 @@ export const AddItem = styled.button`
 
   &:hover {
     cursor: pointer;
+    color: ${(props) => props.theme.darkPurple};
     background: ${(props) => lighten("0.05", props.theme.invoiceBg)};
   }
 `

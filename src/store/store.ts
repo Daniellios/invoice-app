@@ -12,7 +12,7 @@ export const store = configureStore({
     counter: counterReducer,
     themeToggle: themeSlice,
     statusToggle: filterSlice,
-    createInvoice: modalSlice,
+    modalInvoice: modalSlice,
     currData: dataSlice,
   },
 })

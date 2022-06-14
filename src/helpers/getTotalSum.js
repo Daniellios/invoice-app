@@ -7,9 +7,12 @@ export const getTotal = (items) => {
       .reduce((prev, curr) => prev + curr)
       .toFixed(2)
       .toLocaleString("en-US")
-  } else {
+  }
+  if (items) {
     return (items[0].quantity * items[0].price)
       .toFixed(2)
       .toLocaleString("en-US")
+  } else {
+    return (0).toFixed(2).toLocaleString("en-US")
   }
 }

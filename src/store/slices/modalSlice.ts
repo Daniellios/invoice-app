@@ -12,13 +12,13 @@ export const modalSlice = createSlice({
   name: "modalSlice",
   initialState,
   reducers: {
-    newInvoice: (state, action) => {
+    openModal: (state, action) => {
       state.isOpen = action.payload
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { newInvoice } = modalSlice.actions
+export const { openModal } = modalSlice.actions
 
 export default modalSlice.reducer
