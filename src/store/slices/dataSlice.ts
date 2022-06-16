@@ -23,29 +23,33 @@ export interface Item {
   total: number
 }
 
+export interface Invoice {
+  id: string
+  createdAt?: string
+  paymentDue?: string
+  description?: string
+  paymentTerms?: number
+  clientName?: string
+  clientEmail?: string
+  status?: string
+  senderAddress?: SenderAddress
+  clientAddress?: ClientAddress
+  items?: Item[]
+  total?: number
+}
+
 export interface DataState {
-  invoices: Array<{
-    id: string
-    createdAt?: string
-    paymentDue?: string
-    description?: string
-    paymentTerms?: number
-    clientName?: string
-    clientEmail?: string
-    status?: string
-    senderAddress?: SenderAddress
-    clientAddress?: ClientAddress
-    items?: Item[]
-    total?: number
-  }>
-  currInvoice: Object
+  invoices: Invoice[]
+  currInvoice: Invoice
   currID: string
+  emptyInvoice: Invoice
 }
 
 const initialState: DataState = {
   invoices: data,
   currInvoice: null,
   currID: null,
+  emptyInvoice: null,
 }
 
 export const dataSlice = createSlice({
@@ -64,13 +68,32 @@ export const dataSlice = createSlice({
       })[0]
     },
     resetCurrInvoice: (state) => {
+      console.log("CLEARED")
       state.currID = null
       state.currInvoice = null
     },
-    updateData: (state, action) => {
+    updateInvoiceList: (state, action) => {
       state.invoices = action.payload
     },
-    deleteInvoice: (state, action) => {},
+    testInvoice: (state, action) => {
+      state.currInvoice = action.payload
+      console.log(state.currInvoice)
+    },
+    updateInvoiceInfo: (state, action) => {
+      state.invoices = state.invoices.map((item) => {
+        if (item.id === action.payload.id) {
+          item = action.payload
+        }
+        return item
+      })
+      state.currInvoice = action.payload
+    },
+    deleteInvoice: (state, action) => {
+      state.invoices = state.invoices.filter((item, index) => {
+        return item.id !== action.payload
+      })
+      console.log(state.invoices)
+    },
   },
 })
 
@@ -79,7 +102,9 @@ export const {
   getData,
   setId,
   setCurrInvoice,
-  updateData,
+  updateInvoiceList,
+  updateInvoiceInfo,
+  testInvoice,
   deleteInvoice,
   resetCurrInvoice,
 } = dataSlice.actions

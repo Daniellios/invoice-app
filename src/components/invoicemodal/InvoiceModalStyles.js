@@ -14,6 +14,20 @@ export const Modal = styled.div`
   border-bottom-right-radius: 15px;
   padding: 3.4375rem 3.4375rem 2rem 9.875rem;
   overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.input};
+  }
+
   transition: transform 0.3s ease-out;
   transform: ${(props) =>
     props.isOpen ? "translateX(0%)" : "translateX(-100%)"};

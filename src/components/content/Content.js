@@ -63,7 +63,6 @@ const Content = (props) => {
   const [checkedState, setCheckedStates] = useState(statusTypes)
 
   const toggleDiv = () => {
-    // localStorage.clear()
     setIsOpened((wasOpened) => !wasOpened)
   }
 

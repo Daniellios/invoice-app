@@ -20,6 +20,7 @@ export default {
     hash: "#7E88C3",
     modal: "#F8F8FB",
     input: "#DFE3FA",
+
     //// FONTS
     fonts: {
       title: "League Spartan, sans-serif",
@@ -46,7 +47,7 @@ export default {
     pending: "#FF8F00",
     paid: "#33D69F",
     red: "#EC5757",
-    ligthred: "#9277FF",
+    lightred: "#FF9797",
     checkBg: "#DFE3FA",
     amountDue: "#141625",
     white: "#F8F8FB",

@@ -17,7 +17,6 @@
     "react-redux": "^8.0.2",
     "react-svg": "^15.0.1",
     "redux": "^4.2.0",
-    "redux-devtools-extension": "^2.13.9",
     "styled-components": "^5.2.3"
   },
   "devDependencies": {

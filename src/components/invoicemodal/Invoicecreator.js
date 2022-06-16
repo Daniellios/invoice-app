@@ -9,14 +9,11 @@ import {
   ModalInputWrap,
   ModalInputTitle,
   ModalInputMistake,
-  ModalInput,
   ItemListTitle,
-  TotalSumCell,
   AddItem,
   ModalFooter,
   ModalRow,
 } from "./InvoiceModalStyles"
-import { formatMoney } from "../../helpers/moneyFormatter"
 import { Button } from "../../styles/buttons"
 import { useDispatch, useSelector } from "react-redux"
 import { openModal } from "../../store/slices/modalSlice"
@@ -26,28 +23,12 @@ import { useRouter } from "next/router"
 import Dropdown from "../dropdownterms/Dropdown"
 
 import InvoiceItem from "./InvoiceItem"
+import InvoiceInput from "./InvoiceInput"
 import { resetCurrInvoice } from "../../store/slices/dataSlice"
-
-// Close modal with outside click
-let useClickOutside = (handler) => {
-  let modalRef = useRef()
-
-  useEffect(() => {
-    let modalHandler = (event) => {
-      if (!modalRef.current.contains(event.target)) handler()
-    }
-    document.addEventListener("mousedown", modalHandler)
-
-    return () => {
-      document.removeEventListener("mousedown", modalHandler)
-    }
-  }, [])
-
-  return modalRef
-}
+import useClickOutside from "../../hooks/clickOutsideHook"
 
 const Invoicecreator = () => {
-  const modalIsOpen = useSelector((state) => state.modalInvoice.isOpen)
+  const modalIsOpen = useSelector((state) => state.modalInvoice.isModalOpen)
   const dispatch = useDispatch()
   const router = useRouter()
   const [invoice, setCurrInvoice] = useState(
@@ -62,6 +43,7 @@ const Invoicecreator = () => {
     setItemList(newList)
   }
 
+  // remove to invoice item maybe?
   function fillItemList() {
     if (invoice === null) {
       return []
@@ -74,11 +56,12 @@ const Invoicecreator = () => {
     setItemList(itemList.concat({}))
   }
 
-  /// Set EDIT modal type or NEW one
+  /// Set EDIT modal or NEW one
   useEffect(() => {
     dispatch(openModal(false))
     if (router.pathname === "/") {
       dispatch(resetCurrInvoice())
+      setCurrInvoice(null)
       setItemList([])
       setModalType("NEW")
     } else if (router.pathname === "/invoice/[id]") {
@@ -90,6 +73,11 @@ const Invoicecreator = () => {
     dispatch(openModal(false))
   })
 
+  const saveAndSend = () => {
+    console.log("SAVED AND SENT")
+    console.log(invoice)
+  }
+
   return (
     <Modal isOpen={modalIsOpen} ref={domNode}>
       <ModalContent>
@@ -99,78 +87,103 @@ const Invoicecreator = () => {
         {/* Bill FROM  */}
         <ModalBlock billFrom key={"bf"}>
           <ModalBlockTitle>Bill From</ModalBlockTitle>
-          <ModalInputWrap gridArea={"sa"}>
-            <ModalInputTitle>Streen Address</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
-          <ModalInputWrap gridArea={"city"}>
-            <ModalInputTitle>City</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
-          <ModalInputWrap gridArea={"ps"}>
-            <ModalInputTitle>Post Code</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
-          <ModalInputWrap gridArea={"ctry"}>
-            <ModalInputTitle>Country</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
+          <InvoiceInput
+            area={"sa"}
+            value={invoice?.senderAddress.street}
+            initialState={modalType}
+            name={"Street Address"}
+            id={"senderAddress.street"}
+          />
+          <InvoiceInput
+            area={"city"}
+            value={invoice?.senderAddress.city}
+            initialState={modalType}
+            name={"City"}
+            id={"senderAddress.city"}
+          />
+          <InvoiceInput
+            area={"ps"}
+            value={invoice?.senderAddress.postCode}
+            initialState={modalType}
+            name={"Post Code"}
+            id={"senderAddress.postCode"}
+          />
+          <InvoiceInput
+            area={"ctry"}
+            value={invoice?.senderAddress.country}
+            initialState={modalType}
+            name={"Country"}
+            id={"senderAddress.country"}
+          />
         </ModalBlock>
         {/* Bill TO  */}
         <ModalBlock billTo key={"bt"}>
           <ModalBlockTitle>Bill To</ModalBlockTitle>
-          <ModalInputWrap gridArea={"clN"}>
-            <ModalInputTitle>Client's name</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput type={"text"} />
-          </ModalInputWrap>
-          <ModalInputWrap gridArea={"clE"} mistake={false}>
-            <ModalInputTitle>Client's Email</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
-          <ModalInputWrap gridArea={"adrs"} mistake={false}>
-            <ModalInputTitle>Street Address</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
-          <ModalInputWrap gridArea={"city"}>
-            <ModalInputTitle>City</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
-          <ModalInputWrap gridArea={"ps"}>
-            <ModalInputTitle>Post Code</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
-          <ModalInputWrap gridArea={"ctry"}>
-            <ModalInputTitle>Country</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
+          <InvoiceInput
+            area={"clN"}
+            value={invoice?.clientName}
+            initialState={modalType}
+            name={"Client's name"}
+            id={"clientName"}
+          />
+          <InvoiceInput
+            area={"clE"}
+            value={invoice?.clientEmail}
+            initialState={modalType}
+            name={"Client's email"}
+            id={"clientEmail"}
+          />
+          <InvoiceInput
+            area={"adrs"}
+            value={invoice?.clientAddress.street}
+            initialState={modalType}
+            name={"Street Address"}
+            id={"clientAddress.street"}
+          />
+          <InvoiceInput
+            area={"city"}
+            value={invoice?.clientAddress.city}
+            initialState={modalType}
+            name={"City"}
+            id={"clientAddress.city"}
+          />
+          <InvoiceInput
+            area={"ps"}
+            value={invoice?.clientAddress.postCode}
+            initialState={modalType}
+            name={"Post Code"}
+            id={"clientAddress.postCode"}
+          />
+          <InvoiceInput
+            area={"ctry"}
+            value={invoice?.clientAddress.country}
+            initialState={modalType}
+            name={"Country"}
+            id={"clientAddress.country"}
+          />
         </ModalBlock>
         {/* DATES */}
         <ModalBlock dates key={"dt"}>
-          <ModalInputWrap gridArea={"invD"}>
-            <ModalInputTitle>Invoice date</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput type={"date"} />
-          </ModalInputWrap>
+          <InvoiceInput
+            area={"invD"}
+            value={invoice?.createdAt}
+            initialState={modalType}
+            name={"Invoice date"}
+            format={"date"}
+            id={"createdAt"}
+          />
           <ModalInputWrap gridArea={"term"}>
             <ModalInputTitle>Payment terms</ModalInputTitle>
             <ModalInputMistake>Mistake</ModalInputMistake>
-            <Dropdown value={30} />
+            <Dropdown value={invoice?.paymentTerms} />
           </ModalInputWrap>
-          <ModalInputWrap gridArea={"pd"}>
-            <ModalInputTitle>Project Description</ModalInputTitle>
-            <ModalInputMistake>Mistake</ModalInputMistake>
-            <ModalInput />
-          </ModalInputWrap>
+          <InvoiceInput
+            area={"pd"}
+            value={invoice?.description}
+            initialState={modalType}
+            name={"Project Description"}
+            id={"description"}
+          />
         </ModalBlock>
         {/* ITEMS */}
         <ModalBlock list={"true"} key={"itms"}>
@@ -202,8 +215,12 @@ const Invoicecreator = () => {
         <Button onClick={() => dispatch(openModal(false))} basicWhite>
           Discard
         </Button>
-        <Button darkgray>Save as Draft</Button>
-        <Button purple>Sace and Send</Button>
+        <Button darkgray onClick={() => saveAsDraft()}>
+          Save as Draft
+        </Button>
+        <Button purple onClick={() => saveAndSend()}>
+          Save and Send
+        </Button>
       </ModalFooter>
     </Modal>
   )

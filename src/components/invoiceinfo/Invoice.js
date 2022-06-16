@@ -1,6 +1,4 @@
-import React from "react"
-
-import invoices from "../../data/data.json"
+import React, { useState } from "react"
 import { Button } from "../../styles/buttons"
 import { useRouter } from "next/router"
 
@@ -43,10 +41,16 @@ import {
 import { transformDate } from "../../helpers/dateFormatter"
 import { getTotal } from "../../helpers/getTotalSum"
 import { useDispatch, useSelector } from "react-redux"
-import { resetCurrInvoice } from "../../store/slices/dataSlice"
-import { openModal } from "../../store/slices/modalSlice"
+import {
+  resetCurrInvoice,
+  updateData,
+  updateInvoiceInfo,
+  deleteInvoice,
+} from "../../store/slices/dataSlice"
+import { openModal, openPopup } from "../../store/slices/modalSlice"
+import DeletePopup from "../deletepopup/DeletePopup"
 
-const Invoice = (props) => {
+const Invoice = () => {
   const dispatch = useDispatch()
   const invoice = useSelector((state) => state.currData?.currInvoice)
 
@@ -55,10 +59,8 @@ const Invoice = (props) => {
     router.back()
   }
 
-  // console.log(useSelector((state) => state.currData.currInvoice))
-
-  const editInvoice = () => {
-    dispatch(openModal(true))
+  const markAsPaid = () => {
+    dispatch(updateInvoiceInfo({ ...invoice, status: "paid" }))
   }
 
   return (
@@ -76,11 +78,16 @@ const Invoice = (props) => {
           </ItemStatus>
         </StatusPanel>
         <ButtonPanel>
-          <Button onClick={editInvoice} darkgray>
+          <Button onClick={() => dispatch(openModal(true))} darkgray>
             edit
           </Button>
-          <Button red>Delete</Button>
-          <Button purple>Mark As Paid </Button>
+          <Button onClick={() => dispatch(openPopup(true))} red>
+            Delete
+          </Button>
+          <DeletePopup id={invoice.id} />
+          <Button purple onClick={markAsPaid}>
+            Mark As Paid
+          </Button>
         </ButtonPanel>
       </EditPanel>
 
@@ -167,7 +174,9 @@ const Invoice = (props) => {
         </InvoiceContentBottom>
       </InvoiceContentPanel>
       <ButtonsFooter>
-        <Button darkgray>edit</Button>
+        <Button onClick={() => dispatch(openModal(true))} darkgray>
+          edit
+        </Button>
         <Button red>Delete</Button>
         <Button purple>Mark As Paid </Button>
       </ButtonsFooter>

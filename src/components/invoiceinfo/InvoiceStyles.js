@@ -7,12 +7,11 @@ export const Container = styled.div`
   grid-area: c;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
   width: 730px;
   height: 790px;
   background: transparent;
   row-gap: 1.5rem;
-  margin-bottom: 5rem;
+  margin: 3rem auto 5rem auto;
 
   @media ${(props) => props.theme.breakpoints.md} {
     margin-top: 3rem;

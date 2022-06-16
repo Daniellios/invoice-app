@@ -18,7 +18,10 @@ export const Container = styled.main`
   overflow-x: hidden;
 
   ${(props) =>
-    useSelector((state) => state.modalInvoice.isOpen)
+    useSelector(
+      (state) =>
+        state.modalInvoice.isModalOpen || state.modalInvoice.isPopupOpen
+    )
       ? ` &:after {
   width: 100%;
   content: " ";

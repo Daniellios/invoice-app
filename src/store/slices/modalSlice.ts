@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export interface ModalState {
-  isOpen: boolean
+  isModalOpen: boolean
+  isPopupOpen: boolean
 }
 
 const initialState: ModalState = {
-  isOpen: false,
+  isModalOpen: false,
+  isPopupOpen: false,
 }
 
 export const modalSlice = createSlice({
@@ -13,12 +15,15 @@ export const modalSlice = createSlice({
   initialState,
   reducers: {
     openModal: (state, action) => {
-      state.isOpen = action.payload
+      state.isModalOpen = action.payload
+    },
+    openPopup: (state, action) => {
+      state.isPopupOpen = action.payload
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { openModal } = modalSlice.actions
+export const { openModal, openPopup } = modalSlice.actions
 
 export default modalSlice.reducer
