@@ -50,7 +50,7 @@ import {
 import { openModal, openPopup } from "../../store/slices/modalSlice"
 import DeletePopup from "../deletepopup/DeletePopup"
 
-const Invoice = () => {
+const Invoice = ({ id }) => {
   const dispatch = useDispatch()
   const invoice = useSelector((state) => state.currData?.currInvoice)
 

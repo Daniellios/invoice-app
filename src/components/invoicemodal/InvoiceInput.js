@@ -27,14 +27,15 @@ const InvoiceInput = ({
 
   const handleChange = (event) => {
     let currInput = event.target.id.split(".")
-    if (currInput.length === 3) {
-      tempInv[currInput[0]][currInput[2]][currInput[1]] = event.target.value
-    } else if (currInput.length === 2) {
-      tempInv[currInput[0]][currInput[1]] = event.target.value
-    } else if (currInput.length === 1) {
-      tempInv[currInput[0]] = event.target.value
-    }
-    console.log(tempInv)
+    // if (currInput.length === 3) {
+    //   tempInv[currInput[0]][currInput[2]][currInput[1]] = event.target.value
+    // } else if (currInput.length === 2) {
+    //   tempInv[currInput[0]][currInput[1]] = event.target.value
+    // } else if (currInput.length === 1) {
+    //   tempInv[currInput[0]] = event.target.value
+    // }
+
+    console.log(event.target.getAttribute("id"))
   }
 
   return (
