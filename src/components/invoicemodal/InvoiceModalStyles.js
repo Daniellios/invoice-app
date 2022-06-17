@@ -14,6 +14,7 @@ export const Modal = styled.div`
   border-bottom-right-radius: 15px;
   padding: 3.4375rem 3.4375rem 2rem 9.875rem;
   overflow-y: scroll;
+  overflow-x: hidden;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -31,6 +32,21 @@ export const Modal = styled.div`
   transition: transform 0.3s ease-out;
   transform: ${(props) =>
     props.isOpen ? "translateX(0%)" : "translateX(-100%)"};
+
+  @media ${(props) => props.theme.breakpoints.md} {
+    width: 616px;
+    height: 100%;
+    padding: 3rem 3.1875rem 2rem 3.5rem;
+    margin-top: 72px;
+  }
+
+  @media ${(props) => props.theme.breakpoints.mmd} {
+    width: 100%;
+    height: 100%;
+    min-width: 375px;
+    max-width: 616px;
+    padding: 3rem 2rem 2rem 2rem;
+  }
 `
 
 export const ModalContent = styled.div`
@@ -63,6 +79,15 @@ export const ModalBlock = styled.div`
         grid-template-rows: auto 1fr 1fr;
         grid-column-gap: 1.5rem;
 
+      @media ${props.theme.breakpoints.mmd} {
+        grid-template-areas:
+        "t . . ."
+        "sa sa sa sa"
+        "city city ps ps"
+        "ctry ctry ctry ctry";
+        grid-template-columns: repeat(4, 1fr);
+      }
+
       `
     } else if (props.billTo) {
       return `
@@ -75,27 +100,41 @@ export const ModalBlock = styled.div`
       grid-template-columns: repeat(3, 152px);
       grid-template-rows: auto 1fr 1fr 1fr 1fr;
       grid-column-gap: 1.5rem;
+
+      @media ${props.theme.breakpoints.mmd} {
+        grid-template-areas:
+        "t . . ."
+        "clN clN clN clN"
+        "clE clE clE clE"
+        "adrs adrs adrs adrs"
+        "city city ps ps"
+        "ctry ctry ctry ctry";
+        grid-template-columns: repeat(4, 1fr);
+      }
+
       `
     } else if (props.dates) {
       return `
       grid-template-areas:
-    "invD invD term term"
-    "pd pd pd pd";
-    grid-template-columns: repeat(4, 108px);
-    grid-template-rows: 1fr 1fr;
-    grid-column-gap: 1.5rem;
+      "invD invD term term"
+      "pd pd pd pd";
+      grid-template-columns: repeat(4, 108px);
+      grid-template-rows: 1fr 1fr;
+      grid-column-gap: 1.5rem;
+      
+    @media ${props.theme.breakpoints.mmd} {
+      grid-template-areas:
+      "invD"
+      "term"
+      "pd";
+      grid-template-columns: repeat(1, 1fr);
+    }
     `
     } else if (props.list) {
       return `
       grid-template-columns: 1fr ;
       grid-template-rows: auto;
       row-gap: 1rem;
-      // grid-column-gap: 1rem;
-      // grid-row-gap: 1.4rem;
-    // grid-template-columns: 1fr 40px 40px 46px 100px 1fr;
-    // grid-template-rows: auto;
-    // grid-column-gap: 1rem;
-    // grid-row-gap: 1.4rem;
     `
     }
   }}
@@ -104,12 +143,21 @@ export const ModalBlock = styled.div`
 export const ModalRow = styled.div`
   grid-area: auto/1/auto/1;
   grid-template-columns: 1fr 40px 40px 46px 100px 1fr;
+  grid-template-areas: "ItmN ItmN ItmN QTY Price Total";
   width: 100%;
   align-content: flex-end;
   justify-content: flex-end;
   display: grid;
   grid-row-gap: 1rem;
   grid-column-gap: 1rem;
+
+  @media ${(props) => props.theme.breakpoints.mmd} {
+    grid-template-columns: 64px 1fr 1fr 1fr;
+    grid-template-areas:
+      "ItmN ItmN ItmN ItmN"
+      "QTY Price Price Total";
+    display: ${(props) => (props.titleRow ? "none" : "")};
+  }
 `
 
 export const RowCell = styled.div`
@@ -138,6 +186,7 @@ export const ModalInputWrap = styled.div`
   flex-wrap: wrap;
   flex-direction: column;
   row-gap: 0.8rem;
+  width: ${(props) => (props.itemWrap ? "100%" : "")};
 
   ${(props) =>
     props.mistake
@@ -158,8 +207,14 @@ export const ModalInputWrap = styled.div`
 `
 
 export const ModalInputTitle = styled.p`
-  color: ${(props) => props.theme.mainText};
+  color: ${(props) => props.theme.subText1};
   grid-area: ${(props) => props.area};
+  display: ${(props) => (props.itemTitle ? "none" : "")};
+
+  @media ${(props) => props.theme.breakpoints.mmd} {
+    display: ${(props) => (props.rowTitle ? "none" : "")};
+    display: ${(props) => (props.itemTitle ? "unset" : "")};
+  }
 `
 
 export const ModalInputMistake = styled.p`
@@ -178,8 +233,12 @@ export const TotalSumCell = styled.div`
   font-size: 12px;
   font-weight: 600;
   align-items: center;
-  height: 100%;
+  height: 3rem;
   width: 100%;
+
+  @media ${(props) => props.theme.breakpoints.md} {
+    column-gap: 2rem;
+  }
 `
 
 export const ModalInput = styled.input`
@@ -229,5 +288,9 @@ export const ModalFooter = styled.div`
 
   & > button:nth-child(1) {
     margin-right: auto;
+  }
+
+  @media ${(props) => props.theme.breakpoints.md} {
+    max-width: 504px;
   }
 `

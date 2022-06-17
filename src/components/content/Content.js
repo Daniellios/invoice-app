@@ -140,6 +140,9 @@ const Content = (props) => {
               <Link
                 href={{
                   pathname: `/invoice/${encodeURIComponent(item.id)}`,
+                  query: {
+                    id: item.id,
+                  },
                 }}
                 key={index}
               >

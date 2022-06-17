@@ -18,7 +18,12 @@ import { Button } from "../../styles/buttons"
 import { useDispatch, useSelector } from "react-redux"
 import { openModal } from "../../store/slices/modalSlice"
 import { randomIdGenerator } from "../../helpers/idGenerator"
-import { ItemIdHash } from "../../styles/repeatables"
+import {
+  ItemIdHash,
+  GoBackDiv,
+  GoBackLink,
+  GoBackImg,
+} from "../../styles/repeatables"
 import { useRouter } from "next/router"
 import Dropdown from "../dropdownterms/Dropdown"
 
@@ -79,7 +84,13 @@ const Invoicecreator = () => {
   }
 
   return (
-    <Modal isOpen={modalIsOpen} ref={domNode}>
+    <Modal isOpen={modalIsOpen} ref={domNode} data-hook={"ICON"}>
+      <GoBackDiv onModal>
+        <GoBackImg src={"/assets/icon-arrow-left.svg"} />
+        <GoBackLink onClick={() => dispatch(openModal(false))}>
+          Go Back
+        </GoBackLink>
+      </GoBackDiv>
       <ModalContent>
         <ModalTitle>
           {modalType === "NEW" ? `New Invoice` : `Edit #${invoice.id}`}
@@ -188,11 +199,19 @@ const Invoicecreator = () => {
         {/* ITEMS */}
         <ModalBlock list={"true"} key={"itms"}>
           <ItemListTitle>Item List</ItemListTitle>
-          <ModalRow>
-            <ModalInputTitle area={"1/1/1/2"}>Item name</ModalInputTitle>
-            <ModalInputTitle area={"1/4/1/4"}>QTY</ModalInputTitle>
-            <ModalInputTitle area={"1/5/1/5"}>Price</ModalInputTitle>
-            <ModalInputTitle area={"1/6/1/6"}>Total</ModalInputTitle>
+          <ModalRow titleRow>
+            <ModalInputTitle rowTitle area={"ItmN"}>
+              Item name
+            </ModalInputTitle>
+            <ModalInputTitle rowTitle area={"QTY"}>
+              QTY
+            </ModalInputTitle>
+            <ModalInputTitle rowTitle area={"Price"}>
+              Price
+            </ModalInputTitle>
+            <ModalInputTitle rowTitle area={"Total"}>
+              Total
+            </ModalInputTitle>
           </ModalRow>
           {itemList
             ? itemList.map((item, index) => {

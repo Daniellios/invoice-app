@@ -16,6 +16,7 @@ export const Container = styled.main`
   height: 100vh;
   margin: auto;
   overflow-x: hidden;
+  min-width: 375px;
 
   ${(props) =>
     useSelector(

@@ -17,6 +17,7 @@ const GlobalStyles = createGlobalStyle`
     cursor: default;
     transition: all 0.40s linear;
     transition-property: color, background, box-shadow;
+    overflow-x: hidden;
   }
   div{
     // transition:all 0.40s linear;

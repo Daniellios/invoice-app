@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import { useSelector } from "react-redux"
+
 export const Container = styled.div`
   grid-area: c;
   display: flex;
@@ -11,8 +12,13 @@ export const Container = styled.div`
   justify-self: center;
   height: 707px;
   position: relative;
-
+  margin-left: 6rem;
   pointer-events: auto;
+
+  @media ${(props) => props.theme.breakpoints.lg} {
+    margin: 6rem auto 0 auto;
+  }
+
   @media ${(props) => props.theme.breakpoints.md} {
     width: 672px;
   }
@@ -66,24 +72,6 @@ export const InvStatusSpan = styled.span`
   &:hover {
     cursor: pointer;
   }
-
-  &:after {
-    content: "";
-    position: absolute;
-    width: 32%;
-    transform: scaleX(0);
-    height: 2px;
-    bottom: 0.7rem;
-    left: 0;
-    background-color: ${(props) => props.theme.darkPurple};
-    transform-origin: bottom right;
-    transition: transform 0.1s linear;
-  }
-
-  &:hover:after {
-    transform: scaleX(1);
-    transform-origin: bottom left;
-  }
 `
 
 // CHECKBOXES
@@ -114,15 +102,17 @@ export const InvBoxChecks = styled.div`
   border-radius: 5px;
   top: 3.5rem;
   right: 8.5rem;
+
   @media ${(props) => props.theme.breakpoints.md} {
     top: 4rem;
-    right: 4rem;
+    right: 8rem;
   }
 
   @media ${(props) => props.theme.breakpoints.mmd} {
     top: 3rem;
-    right: 4rem;
+    right: 8rem;
     width: 126px;
+    padding-left: 1rem;
   }
 `
 

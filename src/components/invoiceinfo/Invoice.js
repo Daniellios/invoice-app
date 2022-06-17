@@ -4,9 +4,6 @@ import { useRouter } from "next/router"
 
 import {
   Container,
-  GoBackDiv,
-  GoBackImg,
-  GoBackLink,
   EditPanel,
   ButtonPanel,
   StatusSpan,
@@ -29,6 +26,7 @@ import {
   InvoiceCartRow,
   InvoiceTotal,
   ButtonsFooter,
+  Separator,
 } from "../../components/invoiceinfo/InvoiceStyles"
 
 import {
@@ -37,6 +35,9 @@ import {
   ItemStatusTitle,
   ItemId,
   ItemIdHash,
+  GoBackDiv,
+  GoBackImg,
+  GoBackLink,
 } from "../../styles/repeatables"
 import { transformDate } from "../../helpers/dateFormatter"
 import { getTotal } from "../../helpers/getTotalSum"
@@ -49,12 +50,14 @@ import {
 } from "../../store/slices/dataSlice"
 import { openModal, openPopup } from "../../store/slices/modalSlice"
 import DeletePopup from "../deletepopup/DeletePopup"
+import { formatMoney } from "../../helpers/moneyFormatter"
 
 const Invoice = ({ id }) => {
   const dispatch = useDispatch()
   const invoice = useSelector((state) => state.currData?.currInvoice)
 
   const router = useRouter()
+  console.log(router.query)
   const goBack = () => {
     router.back()
   }
@@ -65,6 +68,7 @@ const Invoice = ({ id }) => {
 
   return (
     <Container>
+      <DeletePopup id={invoice.id} />
       <GoBackDiv>
         <GoBackImg src={"/assets/icon-arrow-left.svg"} />
         <GoBackLink onClick={goBack}> Go back</GoBackLink>
@@ -84,7 +88,6 @@ const Invoice = ({ id }) => {
           <Button onClick={() => dispatch(openPopup(true))} red>
             Delete
           </Button>
-          <DeletePopup id={invoice.id} />
           <Button purple onClick={markAsPaid}>
             Mark As Paid
           </Button>
@@ -109,7 +112,7 @@ const Invoice = ({ id }) => {
         </InvoiceContentTop>
 
         <InvoiceContentMiddle>
-          <InvoiceDates>
+          <InvoiceDates area={"Dates"}>
             <InvoiceDate>
               <InvoiceSubTitle>Invoice date </InvoiceSubTitle>
               <InvoiceStrongLine>
@@ -123,7 +126,7 @@ const Invoice = ({ id }) => {
               </InvoiceStrongLine>
             </InvoiceDate>
           </InvoiceDates>
-          <InvoiceBillTo>
+          <InvoiceBillTo area={"BillTo"}>
             <InvoiceSubTitle>Bill to</InvoiceSubTitle>
             <InvoiceStrongLine name="true">
               {invoice.clientName}
@@ -135,7 +138,7 @@ const Invoice = ({ id }) => {
               <ListItem>{invoice.clientAddress.country} </ListItem>
             </AddressInfoList>
           </InvoiceBillTo>
-          <InvoiceEmail>
+          <InvoiceEmail area={"Email"}>
             <InvoiceSubTitle>Sent to</InvoiceSubTitle>
             <InvoiceStrongLine> {invoice.clientEmail}</InvoiceStrongLine>
           </InvoiceEmail>
@@ -144,24 +147,34 @@ const Invoice = ({ id }) => {
         <InvoiceContentBottom>
           <InvoiceCart>
             <InvoiceCartRow titleRow>
-              <InvoiceSubTitle cartTitle>Item Name</InvoiceSubTitle>
-              <InvoiceSubTitle cartTitle>QTY.</InvoiceSubTitle>
-              <InvoiceSubTitle cartTitle>Price</InvoiceSubTitle>
-              <InvoiceSubTitle cartTitle>Total</InvoiceSubTitle>
+              <InvoiceSubTitle area={"ItmN"} cartTitle>
+                Item Name
+              </InvoiceSubTitle>
+              <InvoiceSubTitle area={"qty"} cartTitle>
+                QTY.
+              </InvoiceSubTitle>
+              <InvoiceSubTitle area={"Price"} cartTitle>
+                Price
+              </InvoiceSubTitle>
+              <InvoiceSubTitle area={"Total"} cartTitle>
+                Total
+              </InvoiceSubTitle>
             </InvoiceCartRow>
             {invoice.items.map((item, index) => {
               return (
                 <InvoiceCartRow key={index}>
-                  <InvoiceSubTitle cartItem>{item.name}</InvoiceSubTitle>
-                  <InvoiceSubTitle cartItem>{item.quantity}</InvoiceSubTitle>
-                  <InvoiceSubTitle cartItem>
-                    $ {item.price.toFixed(2).toLocaleString("en-US")}
+                  <InvoiceSubTitle area={"ItmN"} cartItem>
+                    {item.name}
                   </InvoiceSubTitle>
-                  <InvoiceSubTitle cartItem>
-                    ${" "}
-                    {(item.quantity * item.price)
-                      .toFixed(2)
-                      .toLocaleString("en-US")}
+                  <InvoiceSubTitle area={"qty"} cartItem>
+                    {item.quantity}
+                  </InvoiceSubTitle>
+                  <Separator area={"x"}>x</Separator>
+                  <InvoiceSubTitle area={"Price"} cartItem>
+                    ${formatMoney(item.price)}
+                  </InvoiceSubTitle>
+                  <InvoiceSubTitle area={"Total"} cartItem>
+                    $ {formatMoney(item.quantity * item.price)}
                   </InvoiceSubTitle>
                 </InvoiceCartRow>
               )
@@ -177,7 +190,9 @@ const Invoice = ({ id }) => {
         <Button onClick={() => dispatch(openModal(true))} darkgray>
           edit
         </Button>
-        <Button red>Delete</Button>
+        <Button red onClick={() => dispatch(openPopup(true))}>
+          Delete
+        </Button>
         <Button purple>Mark As Paid </Button>
       </ButtonsFooter>
     </Container>

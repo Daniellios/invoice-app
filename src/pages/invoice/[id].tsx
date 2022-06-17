@@ -13,7 +13,7 @@ const InvoicePage: NextPage = () => {
 
   return (
     <Layout>
-      <Invoice id={invoiceID.id}></Invoice>
+      <Invoice id={invoiceID?.id || data.id}></Invoice>
     </Layout>
   )
 }

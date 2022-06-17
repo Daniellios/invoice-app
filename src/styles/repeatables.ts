@@ -1,13 +1,13 @@
 import styled from "styled-components"
 import { rem, rgba } from "polished"
 import { useSelector } from "react-redux"
-import { ThemeState } from "../store/slices/themeSwitch"
 
 interface Props {
   _STATUS?: string
   mainPage?: boolean
   isOpen?: string
   isLink?: boolean
+  onModal?: boolean
 }
 
 export const ItemStatus = styled.div<Props>`
@@ -129,4 +129,60 @@ export const ArrowImg = styled.img<Props>`
       `
     }
   }}
+`
+
+//// GO BACK DIV
+
+export const GoBackDiv = styled.div<Props>`
+  display: ${(props) => (props.onModal ? "none" : "flex")};
+  column-gap: 1rem;
+  justify-self: flex-start;
+  align-self: flex-start;
+
+  @media ${(props) => props.theme.breakpoints.mmd} {
+    display: ${(props) => (props.onModal ? "flex" : "flex")};
+  }
+`
+
+export const GoBackImg = styled.img``
+
+export const GoBackLink = styled.p`
+  font-weight: 600;
+  color: ${(props) => props.theme.mainText};
+  position: relative;
+
+  &: hover {
+    cursor: pointer;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: -3px;
+    left: 0;
+    background-color: ${(props) => props.theme.darkPurple};
+    transform-origin: bottom right;
+    transition: transform 0.1s ease-out;
+  }
+
+  &:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+`
+
+///
+
+export const IconWrap = styled.span`
+  color: ${(props) => props.theme.subText1};
+  transition: 0.1s;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    color: ${(props) => props.theme.white};
+  }
 `

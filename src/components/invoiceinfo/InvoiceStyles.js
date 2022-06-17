@@ -13,52 +13,16 @@ export const Container = styled.div`
   row-gap: 1.5rem;
   margin: 3rem auto 5rem auto;
 
+  @media ${(props) => props.theme.breakpoints.lg} {
+    margin-top: 6rem;
+  }
+
   @media ${(props) => props.theme.breakpoints.md} {
-    margin-top: 3rem;
     width: 688px;
   }
 
   @media ${(props) => props.theme.breakpoints.mmd} {
     width: 327px;
-  }
-`
-
-//// GO BACK DIV
-
-export const GoBackDiv = styled.div`
-  display: flex;
-  column-gap: 1rem;
-  justify-self: flex-start;
-  align-self: flex-start;
-`
-
-export const GoBackImg = styled.img``
-
-export const GoBackLink = styled.p`
-  font-weight: 600;
-  color: ${(props) => props.theme.mainText};
-  position: relative;
-
-  &: hover {
-    cursor: pointer;
-  }
-
-  &:after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    transform: scaleX(0);
-    height: 2px;
-    bottom: -3px;
-    left: 0;
-    background-color: ${(props) => props.theme.darkPurple};
-    transform-origin: bottom right;
-    transition: transform 0.1s ease-out;
-  }
-
-  &:hover:after {
-    transform: scaleX(1);
-    transform-origin: bottom left;
   }
 `
 
@@ -167,52 +131,39 @@ export const ListItem = styled.li`
 /// MID PART
 
 export const InvoiceContentMiddle = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  widht: 100%;
-
-  & > div {
-    margin-right: auto;
-  }
+  display: grid;
+  grid-template-areas:
+    "Dates BillTo Email"
+    "Dates BillTo Email";
+  justify-content: space-between;
+  width: 100%;
 
   @media ${(props) => props.theme.breakpoints.mmd} {
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    justify-content: flex-start;
-    column-gap: 2rem;
+    grid-template-columns: 50% 50%;
+    grid-template-areas:
+      "Dates BillTo"
+      "Email Email";
     row-gap: 2rem;
     height: 220px;
-    & > div {
-      margin-right: 0;
-    }
   }
 `
 
 export const InvoiceDates = styled.div`
   display: flex;
+  grid-area: ${(props) => props.area};
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
-
-  @media ${(props) => props.theme.breakpoints.mmd} {
-    justify-content: space-between;
-    align-items: flex-start;
-    max-height: 143px;
-  }
+  align-items: flex-start;
 `
 
 export const InvoiceDate = styled.div`
   display: flex;
   flex-direction: column;
-  align-self: ${(props) => (props.due ? "flex-end" : "flex-start")};
+  align-self: "flex-start";
   align-items: flex-start;
   justify-content: center;
   row-gap: 1rem;
-  @media ${(props) => props.theme.breakpoints.mmd} {
-    align-self: flex-start;
-  }
 `
 
 export const InvoiceSubTitle = styled.p`
@@ -221,16 +172,15 @@ export const InvoiceSubTitle = styled.p`
     props.cartTitle ? "300" : props.cartItem ? "500" : ""};
   color: ${(props) => props.theme.mainText};
   font-size: ${(props) => (props.cartItem ? "13px" : "")};
+  grid-area: ${(props) => props.area};
 `
 
 export const InvoiceBillTo = styled.div`
   display: flex;
+  grid-area: ${(props) => props.area};
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: flex-start;
   row-gap: 0.5rem;
-  @media ${(props) => props.theme.breakpoints.mmd} {
-    order: 3;
-  }
 `
 
 export const InvoiceStrongLine = styled.h3`
@@ -239,6 +189,7 @@ export const InvoiceStrongLine = styled.h3`
 
 export const InvoiceEmail = styled.div`
   display: flex;
+  grid-area: ${(props) => props.area};
   flex-direction: column;
   align-items: flex-start;
   row-gap: 1rem;
@@ -274,6 +225,7 @@ export const InvoiceCart = styled.div`
 
 export const InvoiceAmountDue = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
   background-color: ${(props) => props.theme.amountDue};
   width: 100%;
@@ -284,48 +236,36 @@ export const InvoiceAmountDue = styled.div`
 `
 
 export const InvoiceCartRow = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-
-  & > p:not(:first-child) {
-    margin-left: auto;
-    text-align: right;
-    width: 4rem;
-  }
-
-  & > p :first-child {
-    width: 5rem;
-    margin-right: auto;
-    text-align: left;
-  }
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-areas: "ItmN ItmN ItmN qty Price Total";
+  justify-content: flex-end;
+  width: 100%;
 
   @media ${(props) => props.theme.breakpoints.mmd} {
-    display: ${(props) => (props.titleRow ? "none" : "flex")};
-    flex-direction: column;
-    // flex-wrap: wrap;
-    // row-gap: 0.5rem;
+    display: ${(props) => (props.titleRow ? "none" : "grid")};
+    row-gap: 0.5rem;
+    column-gap: 0.5rem;
+    grid-template-columns: auto auto 50px 36px 1fr auto;
+    grid-template-areas:
+      "ItmN ItmN ItmN ItmN . ."
+      "qty x Price Price . Total";
+  }
 
-    // & > p :first-child {
-    //   width: 6 rem;
-    //   margin-right: 0;
-    // }
+  & > p:last-child {
+    text-align: right;
+  }
+`
 
-    // & > p:nth-child(2) {
-    //   margin: 0 0 0 0;
-    //   text-align: left;
-    // }
-    // & > p:nth-child(3) {
-    //   margin: 0 0 0 0;
-    //   text-align: left;
-    // }
-    // & > p:nth-child(4) {
-    //   margin: 0 0 0 0;
-    // }
-    // & > p {
-    //   margin: 0;
-    //   flex: 1 0 21%;
-    //   width: 4rem;
-    // }
+export const Separator = styled.p`
+  display: none;
+  align-items: center;
+  justify-content: center;
+  grid-area: ${(props) => props.area};
+  color: ${(props) => props.theme.subText1};
+
+  @media ${(props) => props.theme.breakpoints.mmd} {
+    display: flex;
   }
 `
 

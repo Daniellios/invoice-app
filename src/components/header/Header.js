@@ -14,10 +14,20 @@ import {
 } from "./HeaderStyles"
 import { useSelector, useDispatch } from "react-redux"
 import { toggle } from "../../store/slices/themeSwitch"
+import { openModal } from "../../store/slices/modalSlice"
+import useClickOutside from "../../hooks/clickOutsideHook"
+
+import { BsFillSunFill } from "react-icons/bs"
+import { IoMoon } from "react-icons/io5"
+import { IconWrap } from "../../styles/repeatables"
 
 const Header = (props) => {
   const theme = useSelector((state) => state.themeToggle.value)
   const dispatch = useDispatch()
+
+  const handleTheme = () => {
+    dispatch(toggle())
+  }
 
   useEffect(() => {
     localStorage.setItem("theme", JSON.stringify(theme))
@@ -34,15 +44,13 @@ const Header = (props) => {
         <SwitchContainer>
           <ThemeSwither>
             {theme ? (
-              <MoonIcon
-                onClick={() => dispatch(toggle())}
-                src={"/assets/icon-moon.svg"}
-              />
+              <IconWrap onClick={handleTheme}>
+                <IoMoon size="1.375rem" />
+              </IconWrap>
             ) : (
-              <MoonIcon
-                onClick={() => dispatch(toggle())}
-                src={"/assets/icon-sun.svg"}
-              />
+              <IconWrap onClick={handleTheme}>
+                <BsFillSunFill size="1.375rem" />
+              </IconWrap>
             )}
           </ThemeSwither>
         </SwitchContainer>

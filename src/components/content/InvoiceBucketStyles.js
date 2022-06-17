@@ -64,11 +64,11 @@ export const EmptyInvoiceBucket = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid trnsparent;
+  border: 1px solid transparent;
   row-gap: 2rem;
   height: 339px;
   width: 240px;
-  align-self: center;
+  margin: 8rem auto;
 `
 
 export const EmptyInvoiceImg = styled.img`

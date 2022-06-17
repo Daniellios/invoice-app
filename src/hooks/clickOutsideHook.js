@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react"
 
 // Close modal with outside click
-const useClickOutside = (handler) => {
+const useClickOutside = (handler, parm) => {
   let modalRef = useRef()
 
   useEffect(() => {
