@@ -1,4 +1,4 @@
-**** WORK IN PROGGRESS ****
+**** WORK IN PROGRESS ****
 
 Invoice App / Приложение для выставления счетов
 
