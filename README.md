@@ -1,4 +1,5 @@
 Invoice App / Приложение для выставления счетов
+
 Сделано по макету из Figma, pixel perfect
 Figma Link - https://www.figma.com/file/h1woDaKMqILunuPq3C8KHS/invoice-app?node-id=0%3A1
 Stack - React, Typescript, Redux, NextJS
