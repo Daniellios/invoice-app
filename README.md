@@ -1,3 +1,7 @@
+To Get Started
+npm install
+npm run dev
+
 **** WORK IN PROGRESS ****
 
 Invoice App / Приложение для выставления счетов
