@@ -2,16 +2,15 @@ import { configureStore } from "@reduxjs/toolkit"
 
 import counterReducer from "./slices/counterSlice"
 import dataSlice from "./slices/dataSlice"
-import filterSlice from "./slices/filterSlice"
+import statusSlice from "./slices/filterSlice"
 import modalSlice from "./slices/modalSlice"
-
 import themeSlice from "./slices/themeSwitch"
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     themeToggle: themeSlice,
-    statusToggle: filterSlice,
+    statusToggle: statusSlice,
     modalInvoice: modalSlice,
     currData: dataSlice,
   },

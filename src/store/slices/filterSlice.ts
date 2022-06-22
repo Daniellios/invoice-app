@@ -1,11 +1,15 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
 
 export interface FilterState {
-  value: object[]
+  value: object
 }
 
 const initialState: FilterState = {
-  value: [{ draft: false }, { pending: false }, { paid: false }],
+  value: {
+    draft: false,
+    paid: false,
+    pending: false,
+  },
 }
 
 export const statusSlice = createSlice({
@@ -13,7 +17,7 @@ export const statusSlice = createSlice({
   initialState,
   reducers: {
     setFilterStatus: (state, action) => {
-      return { ...state }
+      state.value = action.payload
     },
   },
 })

@@ -7,7 +7,7 @@ interface Props {
   mainPage?: boolean
   isOpen?: string
   isLink?: boolean
-  onModal?: boolean
+  modalLink?: boolean
 }
 
 export const ItemStatus = styled.div<Props>`
@@ -134,13 +134,13 @@ export const ArrowImg = styled.img<Props>`
 //// GO BACK DIV
 
 export const GoBackDiv = styled.div<Props>`
-  display: ${(props) => (props.onModal ? "none" : "flex")};
+  display: ${(props) => (props.modalLink ? "none" : "flex")};
   column-gap: 1rem;
   justify-self: flex-start;
   align-self: flex-start;
 
   @media ${(props) => props.theme.breakpoints.mmd} {
-    display: ${(props) => (props.onModal ? "flex" : "flex")};
+    display: ${(props) => (props.modalLink ? "flex" : "flex")};
   }
 `
 

@@ -56,8 +56,8 @@ export const dataSlice = createSlice({
   name: "dataSlice",
   initialState,
   reducers: {
-    getData: (state, action) => {
-      state.invoices
+    getInitialData: (state, action) => {
+      return { ...initialState }
     },
     setId: (state, action) => {
       state.currID = action.payload
@@ -77,7 +77,6 @@ export const dataSlice = createSlice({
     },
     testInvoice: (state, action) => {
       state.currInvoice = action.payload
-      console.log(state.currInvoice)
     },
     updateInvoiceInfo: (state, action) => {
       state.invoices = state.invoices.map((item) => {
@@ -99,7 +98,7 @@ export const dataSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
-  getData,
+  getInitialData,
   setId,
   setCurrInvoice,
   updateInvoiceList,

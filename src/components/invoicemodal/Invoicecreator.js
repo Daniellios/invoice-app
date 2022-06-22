@@ -78,6 +78,10 @@ const Invoicecreator = () => {
     dispatch(openModal(false))
   })
 
+  const saveAsDraft = () => {
+    console.log("saved as Draft")
+  }
+
   const saveAndSend = () => {
     console.log("SAVED AND SENT")
     console.log(invoice)
@@ -85,7 +89,7 @@ const Invoicecreator = () => {
 
   return (
     <Modal isOpen={modalIsOpen} ref={domNode} data-hook={"ICON"}>
-      <GoBackDiv onModal>
+      <GoBackDiv modalLink>
         <GoBackImg src={"/assets/icon-arrow-left.svg"} />
         <GoBackLink onClick={() => dispatch(openModal(false))}>
           Go Back

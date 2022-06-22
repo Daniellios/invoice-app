@@ -45,43 +45,56 @@ import {
   ItemIdHash,
   ArrowImg,
 } from "../../styles/repeatables"
-import { openModal } from "../../store/slices/modalSlice"
-import { setCurrInvoice, setId } from "../../store/slices/dataSlice"
+import { openModal, toggleFilter } from "../../store/slices/modalSlice"
+import {
+  getInitialData,
+  setCurrInvoice,
+  setId,
+} from "../../store/slices/dataSlice"
+import FilterBox from "../filterbox/Filter"
 
 const Content = (props) => {
-  const [isOpened, setIsOpened] = useState(false)
   const dispatch = useDispatch()
   const [invoiceList, setInvoceList] = useState(
     useSelector((state) => state.currData.invoices)
   )
+  const filterVisibility = useSelector(
+    (state) => state.modalInvoice.isFilterOpen
+  )
 
+  const filterStatus = useSelector((state) => state.statusToggle.value)
+  const initialState = useSelector((state) => state.currData.invoices)
+
+  // List UPDATE
   useEffect(() => {
     if (invoiceList.length > 100) return
     localStorage.setItem("invoices", JSON.stringify(invoiceList))
   }, [invoiceList])
 
-  const [checkedState, setCheckedStates] = useState(statusTypes)
+  // Filter Update
+  useEffect(() => {
+    const filterStatusArr = Object.values(filterStatus)
+    if (filterStatusArr.every((item) => !item)) {
+      setInvoceList(initialState)
+    } else {
+      const filteredList = []
+      initialState.filter((inv, index) => {
+        if (filterStatus[inv.status]) {
+          filteredList.push(inv)
+        }
+      })
+      setInvoceList(filteredList)
+    }
+    console.log("changed")
+  }, [filterStatus])
 
   const toggleDiv = () => {
-    setIsOpened((wasOpened) => !wasOpened)
+    dispatch(toggleFilter(!filterVisibility))
   }
 
   const chooseInvoice = (id) => {
     dispatch(setId(id))
     dispatch(setCurrInvoice())
-  }
-
-  const handleCheckBox = (name) => {
-    const updatedCheckedState = checkedState.map((item, index) => {
-      const keyName = Object.keys(item)[0]
-      if (name === keyName) {
-        item[name] = !item[name]
-      }
-
-      return item
-    })
-
-    setCheckedStates(updatedCheckedState)
   }
 
   return (
@@ -98,30 +111,12 @@ const Content = (props) => {
         <InvButtonsContainer>
           <InvStatusSpan onClick={toggleDiv}>
             Filter by status
-            <ArrowImg isOpen={isOpened} src={"/assets/icon-arrow-down.svg"} />
+            <ArrowImg
+              isOpen={filterVisibility}
+              src={"/assets/icon-arrow-down.svg"}
+            />
           </InvStatusSpan>
-          {isOpened && (
-            <InvBoxChecks>
-              {checkedState.map((item, index) => {
-                const stName = Object.keys(item)[0]
-                return (
-                  <InvCheckBoxPair key={index}>
-                    <InvCheckBoxCont
-                      onClick={() => handleCheckBox(stName)}
-                      Checked={item[stName]}
-                      id={stName}
-                    >
-                      <InvCheckBoxIcon
-                        Checked={item[stName]}
-                        src={"/assets/icon-check.svg"}
-                      />
-                    </InvCheckBoxCont>
-                    <InvCheckBoxSpan>{stName}</InvCheckBoxSpan>
-                  </InvCheckBoxPair>
-                )
-              })}
-            </InvBoxChecks>
-          )}
+          {filterVisibility && <FilterBox />}
           <Button onClick={() => dispatch(openModal(true))} newInvoice>
             <PlusDiv>
               <PlusIcon src={"/assets/icon-plus.svg"} />

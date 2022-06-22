@@ -7,16 +7,17 @@ export const Container = styled.div`
   width: 730px;
   flex-direction: column;
   row-gap: 3rem;
-  margin: 2rem auto 0 auto;
-  align-self: flex-start;
-  justify-self: center;
-  height: 707px;
+  margin: 0rem auto 0 auto;
+  justify-content: flext-start;
+  height: 100%;
+  // max-height: 707px;
   position: relative;
+  min-height: 707px;
   margin-left: 6rem;
   pointer-events: auto;
 
   @media ${(props) => props.theme.breakpoints.lg} {
-    margin: 6rem auto 0 auto;
+    margin: 8rem auto 0 auto;
   }
 
   @media ${(props) => props.theme.breakpoints.md} {
@@ -79,6 +80,7 @@ export const InvStatusSpan = styled.span`
 export const InvBoxChecks = styled.div`
   position: absolute;
   display: flex;
+  // display: ${(props) => (props.isOpen ? "flex" : "none")};
   flex-direction: column;
   z-index: 10;
   align-items: start;
