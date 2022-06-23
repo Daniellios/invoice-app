@@ -8,6 +8,9 @@ interface Props {
   isOpen?: string
   isLink?: boolean
   modalLink?: boolean
+  big?: boolean
+  themeToggle?: boolean
+  trash?: boolean
 }
 
 export const ItemStatus = styled.div<Props>`
@@ -112,8 +115,8 @@ export const ItemId = styled.p`
   }
 `
 
-export const ItemIdHash = styled.span`
-  font-size: 1rem;
+export const ItemIdHash = styled.span<Props>`
+  font-size: ${(props) => (props.big ? "1.5rem" : "1rem")};
   color: ${(props) => props.theme.hash};
 `
 
@@ -174,15 +177,16 @@ export const GoBackLink = styled.p`
   }
 `
 
-///
-
-export const IconWrap = styled.span`
+export const IconWrap = styled.span<Props>`
   color: ${(props) => props.theme.subText1};
   transition: 0.1s;
-
   &:hover {
     cursor: pointer;
-    transform: scale(1.1);
-    color: ${(props) => props.theme.white};
+    color: ${(props) =>
+      props.themeToggle
+        ? props.theme.white
+        : props.trash
+        ? props.theme.red
+        : props.theme.white};
   }
 `

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import data from "../../data/data.json"
+import { randomIdGenerator } from "../../helpers/idGenerator"
 
 export interface SenderAddress {
   street: string
@@ -43,13 +44,43 @@ export interface DataState {
   currInvoice: Invoice
   currID: string
   emptyInvoice: Invoice
+  item: Item
 }
 
 const initialState: DataState = {
   invoices: data,
   currInvoice: null,
   currID: null,
-  emptyInvoice: null,
+  item: {
+    name: null,
+    quantity: null,
+    price: null,
+    total: null,
+  },
+  emptyInvoice: {
+    id: "",
+    createdAt: "",
+    paymentDue: null,
+    description: null,
+    paymentTerms: null,
+    clientName: null,
+    clientEmail: null,
+    status: null,
+    senderAddress: {
+      street: null,
+      city: null,
+      postCode: null,
+      country: null,
+    },
+    clientAddress: {
+      street: null,
+      city: null,
+      postCode: null,
+      country: null,
+    },
+    items: [],
+    total: null,
+  },
 }
 
 export const dataSlice = createSlice({
@@ -68,7 +99,7 @@ export const dataSlice = createSlice({
       })[0]
     },
     resetCurrInvoice: (state) => {
-      console.log("CLEARED")
+      // console.log("CLEARED")
       state.currID = null
       state.currInvoice = null
     },
@@ -76,8 +107,18 @@ export const dataSlice = createSlice({
       state.invoices = action.payload
     },
     testInvoice: (state, action) => {
-      state.currInvoice = action.payload
+      state.emptyInvoice = action.payload
     },
+    addItem: (state, action) => {
+      if (action.payload === "NEW") {
+        console.log("I M IN NEW")
+        state.emptyInvoice.items.push(state.item)
+      } else if (action.payload === "EDIT") {
+        console.log("I M IN EDIT")
+        state.currInvoice.items.push(state.item)
+      }
+    },
+    removeItem: (state, action) => {},
     updateInvoiceInfo: (state, action) => {
       state.invoices = state.invoices.map((item) => {
         if (item.id === action.payload.id) {
@@ -91,7 +132,7 @@ export const dataSlice = createSlice({
       state.invoices = state.invoices.filter((item, index) => {
         return item.id !== action.payload
       })
-      console.log(state.invoices)
+      // console.log(state.invoices)
     },
   },
 })
@@ -106,6 +147,7 @@ export const {
   testInvoice,
   deleteInvoice,
   resetCurrInvoice,
+  addItem,
 } = dataSlice.actions
 
 export default dataSlice.reducer

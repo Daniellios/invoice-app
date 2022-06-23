@@ -26,8 +26,6 @@ const FilterBox = () => {
     dispatch(setFilterStatus(currBoxState))
   }
 
-  // console.log(boxStatus)
-  // console.log(useSelector((state) => state.statusToggle.value))
   return (
     <InvBoxChecks>
       {filterArr.map((box, index) => (

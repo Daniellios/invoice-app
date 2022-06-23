@@ -44,11 +44,11 @@ const Header = (props) => {
         <SwitchContainer>
           <ThemeSwither>
             {theme ? (
-              <IconWrap onClick={handleTheme}>
+              <IconWrap themeToggle onClick={handleTheme}>
                 <IoMoon size="1.375rem" />
               </IconWrap>
             ) : (
-              <IconWrap onClick={handleTheme}>
+              <IconWrap themeToggle onClick={handleTheme}>
                 <BsFillSunFill size="1.375rem" />
               </IconWrap>
             )}

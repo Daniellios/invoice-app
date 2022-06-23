@@ -13,6 +13,7 @@ const InvoiceInput = ({
   onChangeHandle,
   area,
   initialState,
+  propName,
   format,
   name,
   itemInput,
@@ -20,21 +21,19 @@ const InvoiceInput = ({
 }) => {
   const [mistake, setMistake] = useState(false)
   const invoice = useSelector((state) => state.currData.currInvoice)
-  const editedInvoice = useSelector((state) => state.currData.emptyInvoice)
+  const newInvItem = useSelector((state) => state.currData.emptyInvoice)
   const dispatch = useDispatch()
-  const tempInv = { ...invoice }
   // const [thisInvoice, setThisInvoice] = useState(tempInv)
 
   const handleChange = (event) => {
     let currInput = event.target.id.split(".")
-    // if (currInput.length === 3) {
-    //   tempInv[currInput[0]][currInput[2]][currInput[1]] = event.target.value
-    // } else if (currInput.length === 2) {
-    //   tempInv[currInput[0]][currInput[1]] = event.target.value
-    // } else if (currInput.length === 1) {
-    //   tempInv[currInput[0]] = event.target.value
-    // }
-
+    console.log(newInvItem)
+    if (typeof event.target.value !== "number") {
+      setMistake(true)
+      setTimeout(() => {
+        setMistake(false)
+      }, 1500)
+    }
     console.log(event.target.getAttribute("id"))
   }
 
@@ -42,7 +41,7 @@ const InvoiceInput = ({
     <>
       {itemInput ? (
         <ModalInput
-          defaultValue={initialState === "NEW" ? "" : value}
+          defaultValue={initialState === "NEW" ? propName : value}
           type={format || ""}
           onChange={handleChange}
           area={area}
@@ -53,7 +52,7 @@ const InvoiceInput = ({
           <ModalInputTitle>{name}</ModalInputTitle>
           <ModalInputMistake>Can't be empty</ModalInputMistake>
           <ModalInput
-            defaultValue={initialState === "NEW" ? "" : value}
+            defaultValue={initialState === "NEW" ? propName : value}
             type={format || ""}
             onChange={handleChange}
             id={id}

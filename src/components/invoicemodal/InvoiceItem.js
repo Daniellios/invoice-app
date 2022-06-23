@@ -1,6 +1,7 @@
 import React from "react"
 import { BiTrash } from "react-icons/bi"
 import { formatMoney } from "../../helpers/moneyFormatter"
+import { IconWrap } from "../../styles/repeatables"
 import InvoiceInput from "./InvoiceInput"
 
 import {
@@ -10,7 +11,7 @@ import {
   ModalInputTitle,
 } from "./InvoiceModalStyles"
 
-const InvoiceItem = ({ itemInfo, onRemove, number }) => {
+const InvoiceItem = ({ itemInfo, onRemove, number, propName }) => {
   return (
     <ModalRow number={number}>
       <ModalInputWrap itemWrap gridArea={"ItmN"}>
@@ -19,6 +20,7 @@ const InvoiceItem = ({ itemInfo, onRemove, number }) => {
           value={itemInfo?.name}
           itemInput
           id={`items.name.${number}`}
+          propName={propName?.name}
         />
       </ModalInputWrap>
       <ModalInputWrap itemWrap gridArea={"QTY"}>
@@ -43,10 +45,12 @@ const InvoiceItem = ({ itemInfo, onRemove, number }) => {
           {formatMoney(itemInfo?.total)
             ? formatMoney(itemInfo?.total)
             : formatMoney(0)}
-          <BiTrash
-            onClick={() => onRemove(number)}
-            style={{ width: "16px", height: "16px", cursor: "pointer" }}
-          />
+          <IconWrap trash>
+            <BiTrash
+              onClick={() => onRemove(number)}
+              style={{ width: "16px", height: "16px", cursor: "pointer" }}
+            />
+          </IconWrap>
         </TotalSumCell>
       </ModalInputWrap>
     </ModalRow>
