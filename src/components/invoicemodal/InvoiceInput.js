@@ -1,12 +1,17 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { updateInvoiceInfo, testInvoice } from "../../store/slices/dataSlice"
+import {
+  updateInvoiceInfo,
+  inputInvoiceUpdate,
+} from "../../store/slices/dataSlice"
 import {
   ModalInput,
   ModalInputWrap,
   ModalInputTitle,
   ModalInputMistake,
 } from "./InvoiceModalStyles"
+
+import { set, has } from "lodash"
 
 const InvoiceInput = ({
   value,
@@ -16,46 +21,46 @@ const InvoiceInput = ({
   propName,
   format,
   name,
+  title,
   itemInput,
-  id,
+  onCustomSubmit,
 }) => {
-  const [mistake, setMistake] = useState(false)
-  const invoice = useSelector((state) => state.currData.currInvoice)
-  const newInvItem = useSelector((state) => state.currData.emptyInvoice)
-  const dispatch = useDispatch()
-  // const [thisInvoice, setThisInvoice] = useState(tempInv)
+  const newInv = useSelector((state) => state.currData.emptyInvoice)
 
-  const handleChange = (event) => {
-    let currInput = event.target.id.split(".")
-    console.log(newInvItem)
-    if (typeof event.target.value !== "number") {
-      setMistake(true)
-      setTimeout(() => {
-        setMistake(false)
-      }, 1500)
-    }
-    console.log(event.target.getAttribute("id"))
+  const [mistake, setMistake] = useState(false)
+
+  const dispatch = useDispatch()
+  const copiedObject = JSON.parse(JSON.stringify(newInv))
+  const handleChange = (e) => {
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+    const key = e.target.name
+    const value = e.target.value
+
+    set(copiedObject, key, value)
+    dispatch(inputInvoiceUpdate({ ...copiedObject }))
+    console.log(copiedObject)
   }
 
   return (
     <>
       {itemInput ? (
         <ModalInput
-          defaultValue={initialState === "NEW" ? propName : value}
+          defaultValue={initialState === "NEW" ? null : value}
           type={format || ""}
           onChange={handleChange}
           area={area}
-          id={id}
+          name={name}
         ></ModalInput>
       ) : (
         <ModalInputWrap mistake={mistake} gridArea={area}>
-          <ModalInputTitle>{name}</ModalInputTitle>
+          <ModalInputTitle>{title}</ModalInputTitle>
           <ModalInputMistake>Can't be empty</ModalInputMistake>
           <ModalInput
-            defaultValue={initialState === "NEW" ? propName : value}
+            defaultValue={initialState === "NEW" ? null : value}
             type={format || ""}
             onChange={handleChange}
-            id={id}
+            name={name}
+            // id={id}
           ></ModalInput>
         </ModalInputWrap>
       )}

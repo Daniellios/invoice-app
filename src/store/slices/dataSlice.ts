@@ -87,38 +87,34 @@ export const dataSlice = createSlice({
   name: "dataSlice",
   initialState,
   reducers: {
-    getInitialData: (state, action) => {
-      return { ...initialState }
-    },
     setId: (state, action) => {
       state.currID = action.payload
     },
-    setCurrInvoice: (state, action) => {
-      state.currInvoice = state.invoices.filter((item) => {
-        if (item.id === state.currID) return item
-      })[0]
-    },
-    resetCurrInvoice: (state) => {
-      // console.log("CLEARED")
-      state.currID = null
-      state.currInvoice = null
+    updateWorkingObject: (state, action) => {
+      if (action.payload === "NEW") {
+        console.log("HERE IN NEW OBJ")
+
+        state.currID = null
+        state.currInvoice = { ...state.emptyInvoice }
+      } else if (action.payload === "EDIT") {
+        console.log("HERE IN EDIT OBJ")
+        state.currInvoice = state.invoices.filter((item) => {
+          if (item.id === state.currID) return item
+        })[0]
+      }
     },
     updateInvoiceList: (state, action) => {
       state.invoices = action.payload
     },
-    testInvoice: (state, action) => {
-      state.emptyInvoice = action.payload
+    inputInvoiceUpdate: (state, action) => {
+      state.currInvoice = action.payload
     },
     addItem: (state, action) => {
-      if (action.payload === "NEW") {
-        console.log("I M IN NEW")
-        state.emptyInvoice.items.push(state.item)
-      } else if (action.payload === "EDIT") {
-        console.log("I M IN EDIT")
-        state.currInvoice.items.push(state.item)
-      }
+      state.currInvoice.items.push(state.item)
     },
-    removeItem: (state, action) => {},
+    deleteItem: (state, action) => {
+      state.currInvoice.items.splice(action.payload.itemNumber, 1)
+    },
     updateInvoiceInfo: (state, action) => {
       state.invoices = state.invoices.map((item) => {
         if (item.id === action.payload.id) {
@@ -139,14 +135,13 @@ export const dataSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
-  getInitialData,
   setId,
-  setCurrInvoice,
   updateInvoiceList,
   updateInvoiceInfo,
-  testInvoice,
+  inputInvoiceUpdate,
   deleteInvoice,
-  resetCurrInvoice,
+  updateWorkingObject,
+  deleteItem,
   addItem,
 } = dataSlice.actions
 

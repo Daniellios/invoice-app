@@ -85,7 +85,6 @@ const Content = (props) => {
       })
       setInvoceList(filteredList)
     }
-    console.log("changed")
   }, [filterStatus])
 
   const toggleDiv = () => {
@@ -94,7 +93,6 @@ const Content = (props) => {
 
   const chooseInvoice = (id) => {
     dispatch(setId(id))
-    dispatch(setCurrInvoice())
   }
 
   return (
@@ -135,9 +133,6 @@ const Content = (props) => {
               <Link
                 href={{
                   pathname: `/invoice/${encodeURIComponent(item.id)}`,
-                  query: {
-                    id: item.id,
-                  },
                 }}
                 key={index}
               >

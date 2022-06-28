@@ -54,7 +54,7 @@ import { formatMoney } from "../../helpers/moneyFormatter"
 
 const Invoice = ({ id }) => {
   const dispatch = useDispatch()
-  const invoice = useSelector((state) => state.currData?.currInvoice)
+  const invoice = useSelector((state) => state.currData.currInvoice)
 
   const router = useRouter()
   console.log(router.query)
@@ -71,7 +71,7 @@ const Invoice = ({ id }) => {
       <DeletePopup id={invoice.id} />
       <GoBackDiv>
         <GoBackImg src={"/assets/icon-arrow-left.svg"} />
-        <GoBackLink onClick={goBack}> Go back</GoBackLink>
+        <GoBackLink onClick={goBack}> Go Back</GoBackLink>
       </GoBackDiv>
       <EditPanel>
         <StatusPanel>
@@ -132,10 +132,10 @@ const Invoice = ({ id }) => {
               {invoice.clientName}
             </InvoiceStrongLine>
             <AddressInfoList>
-              <ListItem>{invoice.clientAddress.street} </ListItem>
-              <ListItem>{invoice.clientAddress.city} </ListItem>
-              <ListItem>{invoice.clientAddress.postCode} </ListItem>
-              <ListItem>{invoice.clientAddress.country} </ListItem>
+              <ListItem>{invoice.clientAddress?.street} </ListItem>
+              <ListItem>{invoice.clientAddress?.city} </ListItem>
+              <ListItem>{invoice.clientAddress?.postCode} </ListItem>
+              <ListItem>{invoice.clientAddress?.country} </ListItem>
             </AddressInfoList>
           </InvoiceBillTo>
           <InvoiceEmail area={"Email"}>

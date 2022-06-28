@@ -16,28 +16,15 @@ const InvoiceItem = ({ itemInfo, onRemove, number, propName }) => {
     <ModalRow number={number}>
       <ModalInputWrap itemWrap gridArea={"ItmN"}>
         <ModalInputTitle itemTitle>Item Name</ModalInputTitle>
-        <InvoiceInput
-          value={itemInfo?.name}
-          itemInput
-          id={`items.name.${number}`}
-          propName={propName?.name}
-        />
+        <InvoiceInput value={itemInfo?.name} itemInput />
       </ModalInputWrap>
       <ModalInputWrap itemWrap gridArea={"QTY"}>
         <ModalInputTitle itemTitle>Quantity</ModalInputTitle>
-        <InvoiceInput
-          value={itemInfo?.quantity}
-          itemInput
-          id={`items.quantity.${number}`}
-        />
+        <InvoiceInput value={itemInfo?.quantity} itemInput />
       </ModalInputWrap>
       <ModalInputWrap itemWrap gridArea={"Price"}>
         <ModalInputTitle itemTitle>Price</ModalInputTitle>
-        <InvoiceInput
-          value={itemInfo?.price}
-          itemInput
-          id={`items.price.${number}`}
-        />
+        <InvoiceInput value={itemInfo?.price} itemInput />
       </ModalInputWrap>
       <ModalInputWrap itemWrap gridArea={"Total"}>
         <ModalInputTitle itemTitle>Total</ModalInputTitle>
