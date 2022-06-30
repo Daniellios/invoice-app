@@ -48,9 +48,14 @@ import {
   updateInvoiceInfo,
   deleteInvoice,
 } from "../../store/slices/dataSlice"
-import { openModal, openPopup } from "../../store/slices/modalSlice"
+
 import DeletePopup from "../deletepopup/DeletePopup"
 import { formatMoney } from "../../helpers/moneyFormatter"
+import {
+  deletePopupCloser,
+  deletePopupOpener,
+  modalOpener,
+} from "../../utils/popupsManipulation"
 
 const Invoice = ({ id }) => {
   const dispatch = useDispatch()
@@ -82,10 +87,10 @@ const Invoice = ({ id }) => {
           </ItemStatus>
         </StatusPanel>
         <ButtonPanel>
-          <Button onClick={() => dispatch(openModal(true))} darkgray>
+          <Button onClick={modalOpener} darkgray>
             edit
           </Button>
-          <Button onClick={() => dispatch(openPopup(true))} red>
+          <Button onClick={deletePopupOpener} red>
             Delete
           </Button>
           <Button purple onClick={markAsPaid}>
@@ -187,10 +192,10 @@ const Invoice = ({ id }) => {
         </InvoiceContentBottom>
       </InvoiceContentPanel>
       <ButtonsFooter>
-        <Button onClick={() => dispatch(openModal(true))} darkgray>
+        <Button onClick={modalOpener} darkgray>
           edit
         </Button>
-        <Button red onClick={() => dispatch(openPopup(true))}>
+        <Button red onClick={deletePopupCloser}>
           Delete
         </Button>
         <Button purple>Mark As Paid </Button>

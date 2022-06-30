@@ -9,16 +9,10 @@ import {
   InvTitleWrap,
   InvButtonsContainer,
   InvStatusSpan,
-  InvBoxChecks,
-  InvCheckBoxPair,
-  InvCheckBoxSpan,
-  InvCheckBoxCont,
-  InvCheckBoxIcon,
   PlusIcon,
   PlusDiv,
 } from "./FilterPanelStyles"
 import { Button } from "../../styles/buttons"
-import { statusTypes } from "../../data/constants"
 import {
   InvBucketContainer,
   InvBucketItem,
@@ -45,13 +39,13 @@ import {
   ItemIdHash,
   ArrowImg,
 } from "../../styles/repeatables"
-import { openModal, toggleFilter } from "../../store/slices/modalSlice"
 import {
   getInitialData,
   setCurrInvoice,
   setId,
 } from "../../store/slices/dataSlice"
 import FilterBox from "../filterbox/Filter"
+import { modalOpener, filterToggle } from "../../utils/popupsManipulation"
 
 const Content = (props) => {
   const dispatch = useDispatch()
@@ -62,34 +56,32 @@ const Content = (props) => {
     (state) => state.modalInvoice.isFilterOpen
   )
 
+  const currentInvoiceList = useSelector((state) => state.currData.invoices)
   const filterStatus = useSelector((state) => state.statusToggle.value)
-  const initialState = useSelector((state) => state.currData.invoices)
 
-  // List UPDATE
+  // Local storage update
   useEffect(() => {
     if (invoiceList.length > 100) return
     localStorage.setItem("invoices", JSON.stringify(invoiceList))
   }, [invoiceList])
 
+  console.log(currentInvoiceList)
+
   // Filter Update
   useEffect(() => {
     const filterStatusArr = Object.values(filterStatus)
     if (filterStatusArr.every((item) => !item)) {
-      setInvoceList(initialState)
+      setInvoceList(currentInvoiceList)
     } else {
       const filteredList = []
-      initialState.filter((inv, index) => {
+      currentInvoiceList.filter((inv, index) => {
         if (filterStatus[inv.status]) {
           filteredList.push(inv)
         }
       })
       setInvoceList(filteredList)
     }
-  }, [filterStatus])
-
-  const toggleDiv = () => {
-    dispatch(toggleFilter(!filterVisibility))
-  }
+  }, [filterStatus, currentInvoiceList])
 
   const chooseInvoice = (id) => {
     dispatch(setId(id))
@@ -107,7 +99,7 @@ const Content = (props) => {
           </InvSpan>
         </InvTitleWrap>
         <InvButtonsContainer>
-          <InvStatusSpan onClick={toggleDiv}>
+          <InvStatusSpan onClick={filterToggle}>
             Filter by status
             <ArrowImg
               isOpen={filterVisibility}
@@ -115,7 +107,7 @@ const Content = (props) => {
             />
           </InvStatusSpan>
           {filterVisibility && <FilterBox />}
-          <Button onClick={() => dispatch(openModal(true))} newInvoice>
+          <Button onClick={modalOpener} newInvoice>
             <PlusDiv>
               <PlusIcon src={"/assets/icon-plus.svg"} />
             </PlusDiv>
@@ -126,37 +118,33 @@ const Content = (props) => {
 
       <InvBucketContainer>
         {invoiceList.length > 0 ? (
-          invoiceList.map((item, index) =>
-            item[("id", "paymentDue", "clientName")] == undefined || null ? (
-              ""
-            ) : (
-              <Link
-                href={{
-                  pathname: `/invoice/${encodeURIComponent(item.id)}`,
-                }}
-                key={index}
-              >
-                <InvBucketItem onClick={() => chooseInvoice(item.id)}>
-                  <ItemId>
-                    <ItemIdHash>#</ItemIdHash>
-                    {item.id}
-                  </ItemId>
-                  <ItemDate>Due {transformDate(item.paymentDue)}</ItemDate>
-                  <ItemSender>{item.clientName}</ItemSender>
-                  <ItemPrice>
-                    {item.total ? `$ ${formatMoney(item.total)}` : ""}
-                  </ItemPrice>
-                  <ItemStatus mainPage _STATUS={item.status}>
-                    <ItemStatusCircle />
-                    <ItemStatusTitle>{item.status}</ItemStatusTitle>
-                  </ItemStatus>
-                  <ItemBtnInfo>
-                    <ArrowImg isLink src={"/assets/icon-arrow-right.svg"} />
-                  </ItemBtnInfo>
-                </InvBucketItem>
-              </Link>
-            )
-          )
+          invoiceList.map((item, index) => (
+            <Link
+              href={{
+                pathname: `/invoice/${encodeURIComponent(item.id)}`,
+              }}
+              key={index}
+            >
+              <InvBucketItem onClick={() => chooseInvoice(item.id)}>
+                <ItemId>
+                  <ItemIdHash>#</ItemIdHash>
+                  {item.id}
+                </ItemId>
+                <ItemDate>Due {transformDate(item.paymentDue)}</ItemDate>
+                <ItemSender>{item.clientName}</ItemSender>
+                <ItemPrice>
+                  {item.total ? `$ ${formatMoney(item.total)}` : ""}
+                </ItemPrice>
+                <ItemStatus mainPage _STATUS={item.status}>
+                  <ItemStatusCircle />
+                  <ItemStatusTitle>{item.status}</ItemStatusTitle>
+                </ItemStatus>
+                <ItemBtnInfo>
+                  <ArrowImg isLink src={"/assets/icon-arrow-right.svg"} />
+                </ItemBtnInfo>
+              </InvBucketItem>
+            </Link>
+          ))
         ) : (
           <EmptyInvoiceBucket>
             <EmptyInvoiceImg src={"/assets/illustration-empty.svg"} />

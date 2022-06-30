@@ -34,12 +34,16 @@ import {
   resetCurrInvoice,
   inputInvoiceUpdate,
   updateWorkingObject,
+  addInvoice,
 } from "../../store/slices/dataSlice"
 
 import useClickOutside from "../../hooks/clickOutsideHook"
 import BillFrom from "./BillFrom"
 
 import BillTo from "./BillTo"
+import { values } from "lodash"
+
+import { modalCoser, modalOpener } from "../../utils/popupsManipulation"
 
 const Invoicecreator = () => {
   const modalIsOpen = useSelector((state) => state.modalInvoice.isModalOpen)
@@ -47,10 +51,13 @@ const Invoicecreator = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const invoice = useSelector((state) => state.currData.currInvoice)
+  const invoicesLIST = useSelector((state) => state.currData.invoices)
 
   const epmtyITEM = useSelector((state) => state.currData.item)
 
   const [itemList, setItemList] = useState([])
+
+  let domNode = useClickOutside(modalCoser)
 
   const removeItem = (itemNumber) => {
     const newList = itemList.filter((item, index) => index !== itemNumber)
@@ -61,9 +68,6 @@ const Invoicecreator = () => {
     console.log("NEW SETUP")
     setModalType("NEW")
     dispatch(updateWorkingObject("NEW"))
-
-    // dispatch(inputInvoiceUpdate({ ...invoice, id: randomIdGenerator() }))
-    // setItemList(invoice.items)
   }
 
   const editModalSetup = () => {
@@ -75,7 +79,7 @@ const Invoicecreator = () => {
   }
   /// Set EDIT modal or NEW one
   useEffect(() => {
-    dispatch(openModal(false))
+    modalCoser()
     if (router.pathname === "/") {
       console.log("called")
       newModalSetup()
@@ -86,7 +90,7 @@ const Invoicecreator = () => {
   }, [router.pathname])
 
   const addNewItem = () => {
-    dispatch(addItem(modalType))
+    dispatch(addItem())
     setItemList(itemList.concat(epmtyITEM))
     // setCurrINV(newInv)
   }
@@ -95,10 +99,6 @@ const Invoicecreator = () => {
     console.log("SUBMITTED")
   }
 
-  let domNode = useClickOutside(() => {
-    dispatch(openModal(false))
-  })
-
   const saveAsDraft = () => {
     console.log("saved as Draft")
   }
@@ -106,7 +106,8 @@ const Invoicecreator = () => {
   const saveAndSend = () => {
     handleSubmit()
     console.log("SAVED AND SENT")
-    // console.log(newInv)
+    dispatch(addInvoice(invoice))
+    modalCoser()
   }
   // console.log(newInv)
   console.log("updated", invoice)
@@ -114,9 +115,7 @@ const Invoicecreator = () => {
     <Modal isOpen={modalIsOpen} ref={domNode}>
       <GoBackDiv modalLink>
         <GoBackImg src={"/assets/icon-arrow-left.svg"} />
-        <GoBackLink onClick={() => dispatch(openModal(false))}>
-          Go Back
-        </GoBackLink>
+        <GoBackLink onClick={modalCoser}>Go Back</GoBackLink>
       </GoBackDiv>
       <ModalContent>
         {modalType === "NEW" ? (
@@ -186,7 +185,6 @@ const Invoicecreator = () => {
                     onRemove={removeItem}
                     key={index}
                     number={index}
-                    // propName={invoice?.items[index]}
                   ></InvoiceItem>
                 )
               })
@@ -197,7 +195,7 @@ const Invoicecreator = () => {
         </ModalBlock>
       </ModalContent>
       <ModalFooter>
-        <Button onClick={() => dispatch(openModal(false))} basicWhite>
+        <Button onClick={modalCoser} basicWhite>
           Discard
         </Button>
         <Button darkgray onClick={() => saveAsDraft()}>

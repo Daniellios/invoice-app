@@ -18,38 +18,51 @@ const InvoiceInput = ({
   onChangeHandle,
   area,
   initialState,
-  propName,
   format,
   name,
   title,
   itemInput,
   onCustomSubmit,
+  handleTotal,
+  big,
 }) => {
-  const newInv = useSelector((state) => state.currData.emptyInvoice)
-
+  const newInv = useSelector((state) => state.currData.currInvoice)
   const [mistake, setMistake] = useState(false)
-
   const dispatch = useDispatch()
   const copiedObject = JSON.parse(JSON.stringify(newInv))
+
   const handleChange = (e) => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
     const key = e.target.name
     const value = e.target.value
+    const title = e.target.title
 
+    // milliseconds = days * 1000*60*60*24
+    // console.log(new Date(1656028800000).toISOString().split("T")[0])
+
+    // INSTEAD OF UPDATING IT IN STORE EACH TIME,
+    //  Make it the same as above with totalHandle,
+    // Only dispatch after save and send
     set(copiedObject, key, value)
-    dispatch(inputInvoiceUpdate({ ...copiedObject }))
-    console.log(copiedObject)
+    dispatch(inputInvoiceUpdate(copiedObject))
+    if (title) {
+      handleTotal(copiedObject.items)
+    }
   }
+
+  // console.log(copiedObject)
 
   return (
     <>
       {itemInput ? (
         <ModalInput
+          big={big}
           defaultValue={initialState === "NEW" ? null : value}
           type={format || ""}
           onChange={handleChange}
           area={area}
           name={name}
+          title={title}
         ></ModalInput>
       ) : (
         <ModalInputWrap mistake={mistake} gridArea={area}>
@@ -60,7 +73,6 @@ const InvoiceInput = ({
             type={format || ""}
             onChange={handleChange}
             name={name}
-            // id={id}
           ></ModalInput>
         </ModalInputWrap>
       )}

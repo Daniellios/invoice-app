@@ -249,10 +249,10 @@ export const ModalInput = styled.input`
   color: ${(props) => props.theme.mainText};
   border: 1px solid ${(props) => rgba(props.theme.checkBg, 0.05)};
   font-family: ${(props) => props.theme.fonts.title};
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: ${(props) => (props.big === true ? "0 .5rem" : "0 1rem")};
   border-radius: 3px;
   height: 3rem;
+
   &:hover {
     cursor: pointer;
     border: 1px solid ${(props) => props.theme.darkPurple};

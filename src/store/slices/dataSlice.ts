@@ -58,14 +58,14 @@ const initialState: DataState = {
     total: null,
   },
   emptyInvoice: {
-    id: "",
-    createdAt: "",
+    id: randomIdGenerator(),
+    createdAt: null,
     paymentDue: null,
     description: null,
     paymentTerms: null,
     clientName: null,
     clientEmail: null,
-    status: null,
+    status: "paid",
     senderAddress: {
       street: null,
       city: null,
@@ -93,9 +93,8 @@ export const dataSlice = createSlice({
     updateWorkingObject: (state, action) => {
       if (action.payload === "NEW") {
         console.log("HERE IN NEW OBJ")
-
         state.currID = null
-        state.currInvoice = { ...state.emptyInvoice }
+        state.currInvoice = state.emptyInvoice
       } else if (action.payload === "EDIT") {
         console.log("HERE IN EDIT OBJ")
         state.currInvoice = state.invoices.filter((item) => {
@@ -107,6 +106,7 @@ export const dataSlice = createSlice({
       state.invoices = action.payload
     },
     inputInvoiceUpdate: (state, action) => {
+      // console.log("Input Value Update")
       state.currInvoice = action.payload
     },
     addItem: (state, action) => {
@@ -124,6 +124,9 @@ export const dataSlice = createSlice({
       })
       state.currInvoice = action.payload
     },
+    addInvoice: (state, action) => {
+      state.invoices.push(action.payload)
+    },
     deleteInvoice: (state, action) => {
       state.invoices = state.invoices.filter((item, index) => {
         return item.id !== action.payload
@@ -139,6 +142,7 @@ export const {
   updateInvoiceList,
   updateInvoiceInfo,
   inputInvoiceUpdate,
+  addInvoice,
   deleteInvoice,
   updateWorkingObject,
   deleteItem,
