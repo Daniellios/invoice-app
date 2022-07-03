@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react"
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   updateInvoiceInfo,
   inputInvoiceUpdate,
+  getEditedObject,
 } from "../../store/slices/dataSlice"
 import {
   ModalInput,
@@ -36,7 +42,6 @@ const InvoiceInput = ({
     const key = e.target.name
     const value = e.target.value
     const title = e.target.title
-
     // milliseconds = days * 1000*60*60*24
     // console.log(new Date(1656028800000).toISOString().split("T")[0])
 
@@ -49,8 +54,6 @@ const InvoiceInput = ({
       handleTotal(copiedObject.items)
     }
   }
-
-  // console.log(copiedObject)
 
   return (
     <>

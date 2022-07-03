@@ -11,7 +11,7 @@ import {
   ModalInputTitle,
 } from "./InvoiceModalStyles"
 
-const InvoiceItem = ({ itemInfo, onRemove, number, propName }) => {
+const InvoiceItem = ({ itemInfo, onRemove, number }) => {
   // console.log(itemInfo.quantity, itemInfo.price)
 
   const [total, setTotal] = useState(0)
@@ -21,6 +21,7 @@ const InvoiceItem = ({ itemInfo, onRemove, number, propName }) => {
     const newTotal = quantity * price
     setTotal(formatMoney(newTotal))
   }
+
   // console.log(total)
   return (
     <ModalRow number={number}>
@@ -56,7 +57,7 @@ const InvoiceItem = ({ itemInfo, onRemove, number, propName }) => {
       <ModalInputWrap itemWrap gridArea={"Total"}>
         <ModalInputTitle itemTitle>Total</ModalInputTitle>
         <TotalSumCell>
-          {total}
+          {total || itemInfo.total}
           <IconWrap trash>
             <BiTrash
               onClick={() => onRemove(number)}

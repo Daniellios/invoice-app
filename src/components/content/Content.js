@@ -40,12 +40,14 @@ import {
   ArrowImg,
 } from "../../styles/repeatables"
 import {
+  changeModalType,
   getInitialData,
   setCurrInvoice,
   setId,
+  updateWorkingObject,
 } from "../../store/slices/dataSlice"
 import FilterBox from "../filterbox/Filter"
-import { modalOpener, filterToggle } from "../../utils/popupsManipulation"
+import { modalOpener, filterToggle } from "../../utils/dispatchFunctions"
 
 const Content = (props) => {
   const dispatch = useDispatch()
@@ -82,6 +84,13 @@ const Content = (props) => {
       setInvoceList(filteredList)
     }
   }, [filterStatus, currentInvoiceList])
+
+  // const createNewInvoice = () => {
+  //   dispatch(changeModalType("NEW"))
+  //   dispatch(updateWorkingObject("NEW"))
+  //   dispatch(setId())
+  //   modalOpener()
+  // }
 
   const chooseInvoice = (id) => {
     dispatch(setId(id))

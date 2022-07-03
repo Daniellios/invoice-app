@@ -1,6 +1,7 @@
 import { store } from "../store/store"
 
 import { openModal, openPopup, toggleFilter } from "../store/slices/modalSlice"
+import { updateInvoiceInfo } from "../store/slices/dataSlice"
 
 // MODAL OPEN - CLOSE
 export const modalOpener = () => {
@@ -24,3 +25,8 @@ export const filterToggle = () => {
   const filterVisibility = store.getState().modalInvoice.isFilterOpen
   store.dispatch(toggleFilter(!filterVisibility))
 }
+
+// // SAVE AS DRAFT
+// export const saveDraft = () => {
+//   store.dispatch(updateInvoiceInfo)
+// }

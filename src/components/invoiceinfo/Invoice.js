@@ -47,6 +47,8 @@ import {
   updateData,
   updateInvoiceInfo,
   deleteInvoice,
+  changeModalType,
+  updateWorkingObject,
 } from "../../store/slices/dataSlice"
 
 import DeletePopup from "../deletepopup/DeletePopup"
@@ -55,12 +57,11 @@ import {
   deletePopupCloser,
   deletePopupOpener,
   modalOpener,
-} from "../../utils/popupsManipulation"
+} from "../../utils/dispatchFunctions"
 
 const Invoice = ({ id }) => {
   const dispatch = useDispatch()
   const invoice = useSelector((state) => state.currData.currInvoice)
-
   const router = useRouter()
   console.log(router.query)
   const goBack = () => {
@@ -70,6 +71,12 @@ const Invoice = ({ id }) => {
   const markAsPaid = () => {
     dispatch(updateInvoiceInfo({ ...invoice, status: "paid" }))
   }
+
+  // const editInvoice = () => {
+  //   dispatch(changeModalType("EDIT"))
+  //   dispatch(updateWorkingObject("EDIT"))
+  //   modalOpener()
+  // }
 
   return (
     <Container>
@@ -176,7 +183,7 @@ const Invoice = ({ id }) => {
                   </InvoiceSubTitle>
                   <Separator area={"x"}>x</Separator>
                   <InvoiceSubTitle area={"Price"} cartItem>
-                    ${formatMoney(item.price)}
+                    $ {formatMoney(item.price)}
                   </InvoiceSubTitle>
                   <InvoiceSubTitle area={"Total"} cartItem>
                     $ {formatMoney(item.quantity * item.price)}

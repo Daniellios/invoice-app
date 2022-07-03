@@ -5,7 +5,6 @@ import { useSelector } from "react-redux"
 
 const BillTo = ({ modalState, addressInfo }) => {
   const invoice = useSelector((state) => state.currData.currInvoice)
-
   return (
     <ModalBlock billTo key={"bt"}>
       <ModalBlockTitle>Bill To</ModalBlockTitle>

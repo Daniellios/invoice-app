@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import data from "../../data/data.json"
 import { randomIdGenerator } from "../../helpers/idGenerator"
+import { store } from "../store"
 
 export interface SenderAddress {
   street: string
@@ -45,11 +46,15 @@ export interface DataState {
   currID: string
   emptyInvoice: Invoice
   item: Item
+  modalType: string
+  test: Invoice
 }
 
 const initialState: DataState = {
   invoices: data,
   currInvoice: null,
+  modalType: "NEW",
+  test: null,
   currID: null,
   item: {
     name: null,
@@ -58,14 +63,14 @@ const initialState: DataState = {
     total: null,
   },
   emptyInvoice: {
-    id: randomIdGenerator(),
+    id: "",
     createdAt: null,
     paymentDue: null,
     description: null,
     paymentTerms: null,
     clientName: null,
     clientEmail: null,
-    status: "paid",
+    status: null,
     senderAddress: {
       street: null,
       city: null,
@@ -87,16 +92,20 @@ export const dataSlice = createSlice({
   name: "dataSlice",
   initialState,
   reducers: {
+    changeModalType: (state, action) => {
+      state.modalType = action.payload
+    },
     setId: (state, action) => {
       state.currID = action.payload
     },
     updateWorkingObject: (state, action) => {
-      if (action.payload === "NEW") {
+      if (action.payload.TYPE === "NEW") {
         console.log("HERE IN NEW OBJ")
-        state.currID = null
         state.currInvoice = state.emptyInvoice
-      } else if (action.payload === "EDIT") {
+        state.currInvoice.id = action.payload.id
+      } else if (action.payload.TYPE === "EDIT") {
         console.log("HERE IN EDIT OBJ")
+
         state.currInvoice = state.invoices.filter((item) => {
           if (item.id === state.currID) return item
         })[0]
@@ -105,6 +114,7 @@ export const dataSlice = createSlice({
     updateInvoiceList: (state, action) => {
       state.invoices = action.payload
     },
+
     inputInvoiceUpdate: (state, action) => {
       // console.log("Input Value Update")
       state.currInvoice = action.payload
@@ -125,13 +135,27 @@ export const dataSlice = createSlice({
       state.currInvoice = action.payload
     },
     addInvoice: (state, action) => {
-      state.invoices.push(action.payload)
+      state.invoices = state.invoices.map((item, index, arr) => {
+        if (item.id === action.payload.id) {
+          console.log(item.id)
+          console.log(action.payload.id)
+          console.log("YSE HERE")
+
+          arr.splice(index, 1, action.payload)
+          return item
+        } else {
+          state.invoices.push(action.payload)
+        }
+      })
     },
     deleteInvoice: (state, action) => {
       state.invoices = state.invoices.filter((item, index) => {
         return item.id !== action.payload
       })
       // console.log(state.invoices)
+    },
+    getEditedObject: (state, action) => {
+      state.test = action.payload
     },
   },
 })
@@ -145,6 +169,8 @@ export const {
   addInvoice,
   deleteInvoice,
   updateWorkingObject,
+  changeModalType,
+  getEditedObject,
   deleteItem,
   addItem,
 } = dataSlice.actions

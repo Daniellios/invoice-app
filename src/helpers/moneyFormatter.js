@@ -1,3 +1,3 @@
 export const formatMoney = (price) => {
-  return price?.toFixed(2).toLocaleString("en-US")
+  return Number(price)?.toFixed(2).toLocaleString("en-US")
 }

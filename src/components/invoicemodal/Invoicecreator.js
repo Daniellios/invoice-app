@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import {
   Modal,
   ModalContent,
@@ -15,7 +15,6 @@ import {
 } from "./InvoiceModalStyles"
 import { Button } from "../../styles/buttons"
 import { useDispatch, useSelector } from "react-redux"
-import { openModal, setModalType } from "../../store/slices/modalSlice"
 import { randomIdGenerator } from "../../helpers/idGenerator"
 import {
   ItemIdHash,
@@ -35,50 +34,64 @@ import {
   inputInvoiceUpdate,
   updateWorkingObject,
   addInvoice,
+  updateInvoiceInfo,
+  setId,
+  changeModalType,
 } from "../../store/slices/dataSlice"
 
 import useClickOutside from "../../hooks/clickOutsideHook"
 import BillFrom from "./BillFrom"
 
 import BillTo from "./BillTo"
-import { values } from "lodash"
 
-import { modalCoser, modalOpener } from "../../utils/popupsManipulation"
+import { modalCoser, modalOpener } from "../../utils/dispatchFunctions"
 
 const Invoicecreator = () => {
   const modalIsOpen = useSelector((state) => state.modalInvoice.isModalOpen)
   const [modalType, setModalType] = useState("NEW")
+
+  // const testTYPE = useSelector((state) => state.currData.modalType)
   const dispatch = useDispatch()
   const router = useRouter()
   const invoice = useSelector((state) => state.currData.currInvoice)
   const invoicesLIST = useSelector((state) => state.currData.invoices)
 
+  const updatedObj = useSelector((state) => state.currData.test)
   const epmtyITEM = useSelector((state) => state.currData.item)
 
   const [itemList, setItemList] = useState([])
 
   let domNode = useClickOutside(modalCoser)
 
+  // UPDATE LIST ITEMS
+  useEffect(() => {
+    setItemList(invoice?.items)
+  }, [invoice])
+
+  // REMOVE ITEM FROM
   const removeItem = (itemNumber) => {
     const newList = itemList.filter((item, index) => index !== itemNumber)
     dispatch(deleteItem({ type: modalType, itemNumber: itemNumber }))
     setItemList(newList)
   }
+
+  //  UPDATE OBJECT ON NEW INVOICE
   const newModalSetup = () => {
     console.log("NEW SETUP")
     setModalType("NEW")
-    dispatch(updateWorkingObject("NEW"))
+    dispatch(updateWorkingObject({ TYPE: "NEW", id: randomIdGenerator() }))
   }
 
+  //  UPDATE OBJECT ON EDIT INVOICE
   const editModalSetup = () => {
     console.log("EDIT SETUP")
     setModalType("EDIT")
-    dispatch(updateWorkingObject("EDIT"))
-
-    setItemList(invoice.items)
+    dispatch(updateWorkingObject({ TYPE: "EDIT" }))
   }
+
   /// Set EDIT modal or NEW one
   useEffect(() => {
+    console.log("rendered")
     modalCoser()
     if (router.pathname === "/") {
       console.log("called")
@@ -92,25 +105,24 @@ const Invoicecreator = () => {
   const addNewItem = () => {
     dispatch(addItem())
     setItemList(itemList.concat(epmtyITEM))
-    // setCurrINV(newInv)
-  }
-
-  const handleSubmit = () => {
-    console.log("SUBMITTED")
   }
 
   const saveAsDraft = () => {
     console.log("saved as Draft")
+    dispatch(updateInvoiceInfo({ ...invoice, status: "draft" }))
   }
 
+  // const memeTEST = useMemo(() => saveAndSend)
+
   const saveAndSend = () => {
-    handleSubmit()
     console.log("SAVED AND SENT")
-    dispatch(addInvoice(invoice))
+    dispatch(updateInvoiceInfo({ ...invoice, status: "pending" }))
     modalCoser()
   }
-  // console.log(newInv)
-  console.log("updated", invoice)
+
+  // HERE IS STIL EDIT ONE
+  console.log(invoice)
+  console.log(itemList)
   return (
     <Modal isOpen={modalIsOpen} ref={domNode}>
       <GoBackDiv modalLink>
@@ -198,10 +210,10 @@ const Invoicecreator = () => {
         <Button onClick={modalCoser} basicWhite>
           Discard
         </Button>
-        <Button darkgray onClick={() => saveAsDraft()}>
+        <Button darkgray onClick={saveAsDraft}>
           Save as Draft
         </Button>
-        <Button purple onClick={() => saveAndSend()}>
+        <Button purple onClick={saveAndSend}>
           Save and Send
         </Button>
       </ModalFooter>

@@ -93,6 +93,7 @@ export const InvoiceContentPanel = styled.div`
 export const InvoiceContentTop = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 
   @media ${(props) => props.theme.breakpoints.mmd} {
     flex-direction: column;
