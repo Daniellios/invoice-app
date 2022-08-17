@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 
 import {
   Container,
@@ -11,17 +11,20 @@ import { Button } from "../../styles/buttons"
 
 import { deleteInvoice } from "../../store/slices/dataSlice"
 import { useDispatch, useSelector } from "react-redux"
-import { openPopup } from "../../store/slices/modalSlice"
+import {
+  deleteModalStatus,
+  openDeletePopup,
+} from "../../store/slices/modalSlice"
 import { useRouter } from "next/router"
 
 const DeletePopup = ({ id }) => {
   const dispatch = useDispatch()
-  const isOpen = useSelector((state) => state.modalInvoice.isPopupOpen)
+  const isOpen = useSelector(deleteModalStatus)
   const router = useRouter()
 
   const handleDelete = () => {
     dispatch(deleteInvoice(id))
-    dispatch(openPopup(false))
+    dispatch(openDeletePopup(false))
     router.back()
   }
 
@@ -33,7 +36,7 @@ const DeletePopup = ({ id }) => {
         undone.
       </PopupText>
       <ButtonWrap>
-        <Button onClick={() => dispatch(openPopup(false))} darkgray>
+        <Button onClick={() => dispatch(openDeletePopup(false))} darkgray>
           Cancel
         </Button>
         <Button onClick={handleDelete} red>

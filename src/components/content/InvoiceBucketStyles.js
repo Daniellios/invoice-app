@@ -1,6 +1,4 @@
 import styled from "styled-components"
-import { rem, rgba } from "polished"
-import { useSelector } from "react-redux"
 
 export const InvBucketContainer = styled.div`
   display: flex;

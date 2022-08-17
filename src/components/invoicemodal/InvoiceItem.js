@@ -57,7 +57,7 @@ const InvoiceItem = ({ itemInfo, onRemove, number }) => {
       <ModalInputWrap itemWrap gridArea={"Total"}>
         <ModalInputTitle itemTitle>Total</ModalInputTitle>
         <TotalSumCell>
-          {total || itemInfo.total}
+          {total || itemInfo?.total}
           <IconWrap trash>
             <BiTrash
               onClick={() => onRemove(number)}

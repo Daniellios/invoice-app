@@ -5,7 +5,7 @@ import { useSelector } from "react-redux"
 interface Props {
   _STATUS?: string
   mainPage?: boolean
-  isOpen?: string
+  isOpen?: boolean
   isLink?: boolean
   modalLink?: boolean
   big?: boolean
@@ -31,7 +31,7 @@ export const ItemStatus = styled.div<Props>`
       : ``}
 
   ${(props) => {
-    if (useSelector((state: any) => state.themeToggle.value)) {
+    if (useSelector((state: any) => state.theme.value)) {
       if (props._STATUS === "draft") {
         return `
           color: ${props.theme.draft};
@@ -154,7 +154,7 @@ export const GoBackLink = styled.p`
   color: ${(props) => props.theme.mainText};
   position: relative;
 
-  &: hover {
+  &:hover {
     cursor: pointer;
   }
 

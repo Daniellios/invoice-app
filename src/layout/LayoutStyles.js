@@ -20,8 +20,7 @@ export const Container = styled.main`
 
   ${(props) =>
     useSelector(
-      (state) =>
-        state.modalInvoice.isModalOpen || state.modalInvoice.isPopupOpen
+      (state) => state.modals.isModalOpen || state.modals.isDeletePopupOpen
     )
       ? ` &:after {
   width: 100%;

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { Button } from "../../styles/buttons"
 import { useRouter } from "next/router"
 
@@ -42,14 +42,7 @@ import {
 import { transformDate } from "../../helpers/dateFormatter"
 import { getTotal } from "../../helpers/getTotalSum"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  resetCurrInvoice,
-  updateData,
-  updateInvoiceInfo,
-  deleteInvoice,
-  changeModalType,
-  updateWorkingObject,
-} from "../../store/slices/dataSlice"
+import { updateInvoiceInfo } from "../../store/slices/dataSlice"
 
 import DeletePopup from "../deletepopup/DeletePopup"
 import { formatMoney } from "../../helpers/moneyFormatter"
@@ -59,28 +52,24 @@ import {
   modalOpener,
 } from "../../utils/dispatchFunctions"
 
-const Invoice = ({ id }) => {
+const Invoice = ({ invoiceInfo }) => {
   const dispatch = useDispatch()
-  const invoice = useSelector((state) => state.currData.currInvoice)
   const router = useRouter()
-  console.log(router.query)
+  const invoice = useSelector((state) => state.data.currInvoice)
+
+  console.log(invoice)
+
   const goBack = () => {
     router.back()
   }
 
   const markAsPaid = () => {
-    dispatch(updateInvoiceInfo({ ...invoice, status: "paid" }))
+    dispatch(updateInvoiceInfo({ ...invoiceInfo, status: "paid" }))
   }
-
-  // const editInvoice = () => {
-  //   dispatch(changeModalType("EDIT"))
-  //   dispatch(updateWorkingObject("EDIT"))
-  //   modalOpener()
-  // }
 
   return (
     <Container>
-      <DeletePopup id={invoice.id} />
+      <DeletePopup id={invoiceInfo.id} />
       <GoBackDiv>
         <GoBackImg src={"/assets/icon-arrow-left.svg"} />
         <GoBackLink onClick={goBack}> Go Back</GoBackLink>
@@ -88,9 +77,9 @@ const Invoice = ({ id }) => {
       <EditPanel>
         <StatusPanel>
           <StatusSpan>Status</StatusSpan>
-          <ItemStatus _STATUS={invoice.status}>
+          <ItemStatus _STATUS={invoiceInfo.status}>
             <ItemStatusCircle />
-            <ItemStatusTitle>{invoice.status} </ItemStatusTitle>
+            <ItemStatusTitle>{invoiceInfo.status} </ItemStatusTitle>
           </ItemStatus>
         </StatusPanel>
         <ButtonPanel>
@@ -111,15 +100,14 @@ const Invoice = ({ id }) => {
           <InvoiceName>
             <ItemId>
               <ItemIdHash>#</ItemIdHash>
-              {invoice.id}
+              {invoiceInfo.id}
             </ItemId>
-            <InvoiceSubTitle>{invoice.description}</InvoiceSubTitle>
+            <InvoiceSubTitle>{invoiceInfo.description}</InvoiceSubTitle>
           </InvoiceName>
           <AddressInfoList sender>
-            <ListItem> {invoice.senderAddress?.street}</ListItem>
-            <ListItem> {invoice.senderAddress?.city}</ListItem>
-            <ListItem> {invoice.senderAddress?.postCode}</ListItem>
-            <ListItem> {invoice.senderAddress?.country}</ListItem>
+            {Object.values(invoiceInfo.senderAddress).map((value, index) => (
+              <ListItem key={index + value.at(0)}> {value}</ListItem>
+            ))}
           </AddressInfoList>
         </InvoiceContentTop>
 
@@ -128,31 +116,30 @@ const Invoice = ({ id }) => {
             <InvoiceDate>
               <InvoiceSubTitle>Invoice date </InvoiceSubTitle>
               <InvoiceStrongLine>
-                {transformDate(invoice.createdAt)}
+                {transformDate(invoiceInfo.createdAt)}
               </InvoiceStrongLine>
             </InvoiceDate>
             <InvoiceDate due>
               <InvoiceSubTitle>Payment Due </InvoiceSubTitle>
               <InvoiceStrongLine>
-                {transformDate(invoice.paymentDue)}
+                {transformDate(invoiceInfo.paymentDue)}
               </InvoiceStrongLine>
             </InvoiceDate>
           </InvoiceDates>
           <InvoiceBillTo area={"BillTo"}>
             <InvoiceSubTitle>Bill to</InvoiceSubTitle>
             <InvoiceStrongLine name="true">
-              {invoice.clientName}
+              {invoiceInfo.clientName}
             </InvoiceStrongLine>
             <AddressInfoList>
-              <ListItem>{invoice.clientAddress?.street} </ListItem>
-              <ListItem>{invoice.clientAddress?.city} </ListItem>
-              <ListItem>{invoice.clientAddress?.postCode} </ListItem>
-              <ListItem>{invoice.clientAddress?.country} </ListItem>
+              {Object.values(invoiceInfo.clientAddress).map((value, index) => (
+                <ListItem key={index + value.at(0)}> {value}</ListItem>
+              ))}
             </AddressInfoList>
           </InvoiceBillTo>
           <InvoiceEmail area={"Email"}>
             <InvoiceSubTitle>Sent to</InvoiceSubTitle>
-            <InvoiceStrongLine> {invoice.clientEmail}</InvoiceStrongLine>
+            <InvoiceStrongLine> {invoiceInfo.clientEmail}</InvoiceStrongLine>
           </InvoiceEmail>
         </InvoiceContentMiddle>
 
@@ -172,7 +159,7 @@ const Invoice = ({ id }) => {
                 Total
               </InvoiceSubTitle>
             </InvoiceCartRow>
-            {invoice.items.map((item, index) => {
+            {invoiceInfo.items?.map((item, index) => {
               return (
                 <InvoiceCartRow key={index}>
                   <InvoiceSubTitle area={"ItmN"} cartItem>
@@ -194,7 +181,7 @@ const Invoice = ({ id }) => {
           </InvoiceCart>
           <InvoiceAmountDue>
             <InvoiceSubTitle>Amount Due </InvoiceSubTitle>
-            <InvoiceTotal>$ {getTotal(invoice.items)}</InvoiceTotal>
+            <InvoiceTotal>$ {getTotal(invoiceInfo.items)}</InvoiceTotal>
           </InvoiceAmountDue>
         </InvoiceContentBottom>
       </InvoiceContentPanel>

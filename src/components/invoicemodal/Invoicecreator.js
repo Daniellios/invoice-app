@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   Modal,
   ModalContent,
@@ -15,7 +15,6 @@ import {
 } from "./InvoiceModalStyles"
 import { Button } from "../../styles/buttons"
 import { useDispatch, useSelector } from "react-redux"
-import { randomIdGenerator } from "../../helpers/idGenerator"
 import {
   ItemIdHash,
   GoBackDiv,
@@ -30,38 +29,40 @@ import InvoiceInput from "./InvoiceInput"
 import {
   addItem,
   deleteItem,
-  resetCurrInvoice,
-  inputInvoiceUpdate,
   updateWorkingObject,
-  addInvoice,
   updateInvoiceInfo,
-  setId,
   changeModalType,
+  invoices,
+  selectModalType,
+  selectItems,
+  createNewModal,
 } from "../../store/slices/dataSlice"
 
-import useClickOutside from "../../hooks/clickOutsideHook"
+import useOnClickOutside from "../../hooks/useClickOutsideHook"
 import BillFrom from "./BillFrom"
 
 import BillTo from "./BillTo"
 
 import { modalCoser, modalOpener } from "../../utils/dispatchFunctions"
+import { modalStatus } from "../../store/slices/modalSlice"
 
 const Invoicecreator = () => {
-  const modalIsOpen = useSelector((state) => state.modalInvoice.isModalOpen)
-  const [modalType, setModalType] = useState("NEW")
-
-  // const testTYPE = useSelector((state) => state.currData.modalType)
   const dispatch = useDispatch()
-  const router = useRouter()
-  const invoice = useSelector((state) => state.currData.currInvoice)
-  const invoicesLIST = useSelector((state) => state.currData.invoices)
+  const modalIsOpen = useSelector(modalStatus)
 
-  const updatedObj = useSelector((state) => state.currData.test)
-  const epmtyITEM = useSelector((state) => state.currData.item)
+  const modalType = useSelector(selectModalType)
+
+  const invoiceItems = useSelector(selectItems)
+
+  const modalREF = useRef()
+
+  const router = useRouter()
+  const invoice = useSelector((state) => state.data.currInvoice)
+  const invoicesLIST = useSelector(invoices)
 
   const [itemList, setItemList] = useState([])
 
-  let domNode = useClickOutside(modalCoser)
+  useOnClickOutside(modalREF, () => modalCoser())
 
   // UPDATE LIST ITEMS
   useEffect(() => {
@@ -78,14 +79,14 @@ const Invoicecreator = () => {
   //  UPDATE OBJECT ON NEW INVOICE
   const newModalSetup = () => {
     console.log("NEW SETUP")
-    setModalType("NEW")
-    dispatch(updateWorkingObject({ TYPE: "NEW", id: randomIdGenerator() }))
+    dispatch(createNewModal())
+    // dispatch(updateWorkingObject({ TYPE: "NEW", id: randomIdGenerator() }))
   }
 
   //  UPDATE OBJECT ON EDIT INVOICE
   const editModalSetup = () => {
     console.log("EDIT SETUP")
-    setModalType("EDIT")
+    dispatch(changeModalType("NEW"))
     dispatch(updateWorkingObject({ TYPE: "EDIT" }))
   }
 
@@ -104,7 +105,6 @@ const Invoicecreator = () => {
 
   const addNewItem = () => {
     dispatch(addItem())
-    setItemList(itemList.concat(epmtyITEM))
   }
 
   const saveAsDraft = () => {
@@ -112,19 +112,14 @@ const Invoicecreator = () => {
     dispatch(updateInvoiceInfo({ ...invoice, status: "draft" }))
   }
 
-  // const memeTEST = useMemo(() => saveAndSend)
-
   const saveAndSend = () => {
     console.log("SAVED AND SENT")
     dispatch(updateInvoiceInfo({ ...invoice, status: "pending" }))
     modalCoser()
   }
 
-  // HERE IS STIL EDIT ONE
-  console.log(invoice)
-  console.log(itemList)
   return (
-    <Modal isOpen={modalIsOpen} ref={domNode}>
+    <Modal isOpen={modalIsOpen} ref={modalREF}>
       <GoBackDiv modalLink>
         <GoBackImg src={"/assets/icon-arrow-left.svg"} />
         <GoBackLink onClick={modalCoser}>Go Back</GoBackLink>
@@ -189,8 +184,8 @@ const Invoicecreator = () => {
               Total
             </ModalInputTitle>
           </ModalRow>
-          {itemList
-            ? itemList.map((item, index) => {
+          {invoiceItems
+            ? invoiceItems.map((item, index) => {
                 return (
                   <InvoiceItem
                     itemInfo={item}

@@ -1,130 +1,107 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-
-import data from "../../data/data.json"
-import { randomIdGenerator } from "../../helpers/idGenerator"
-import { store } from "../store"
-
-export interface SenderAddress {
-  street: string
-  city: string
-  postCode: string
-  country: string
-}
-
-export interface ClientAddress {
-  street: string
-  city: string
-  postCode: string
-  country: string
-}
-
-export interface Item {
-  name: string
-  quantity: number
-  price: number
-  total: number
-}
-
-export interface Invoice {
-  id: string
-  createdAt?: string
-  paymentDue?: string
-  description?: string
-  paymentTerms?: number
-  clientName?: string
-  clientEmail?: string
-  status?: string
-  senderAddress?: SenderAddress
-  clientAddress?: ClientAddress
-  items?: Item[]
-  total?: number
-}
+import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit"
+import { RootState } from "../store"
+import initialData from "../initialState/initialData"
+import { Invoice, Item } from "../../types/interfaces"
 
 export interface DataState {
   invoices: Invoice[]
   currInvoice: Invoice
-  currID: string
-  emptyInvoice: Invoice
-  item: Item
   modalType: string
-  test: Invoice
 }
 
 const initialState: DataState = {
-  invoices: data,
+  invoices: initialData,
   currInvoice: null,
   modalType: "NEW",
-  test: null,
-  currID: null,
-  item: {
-    name: null,
-    quantity: null,
-    price: null,
-    total: null,
-  },
-  emptyInvoice: {
-    id: "",
-    createdAt: null,
-    paymentDue: null,
-    description: null,
-    paymentTerms: null,
-    clientName: null,
-    clientEmail: null,
-    status: null,
-    senderAddress: {
-      street: null,
-      city: null,
-      postCode: null,
-      country: null,
-    },
-    clientAddress: {
-      street: null,
-      city: null,
-      postCode: null,
-      country: null,
-    },
-    items: [],
-    total: null,
-  },
 }
 
-export const dataSlice = createSlice({
-  name: "dataSlice",
+//PREPARE PAYLODA FOR EMPTY ITEM AND INVOICE MAYBE
+
+export const dataReducer = createSlice({
+  name: "dataReducer",
   initialState,
   reducers: {
+    // ++++
     changeModalType: (state, action) => {
       state.modalType = action.payload
     },
-    setId: (state, action) => {
-      state.currID = action.payload
+    createNewModal: {
+      reducer(state, action: PayloadAction<Invoice>) {
+        state.currInvoice = action.payload
+      },
+      prepare() {
+        return {
+          payload: {
+            id: nanoid(6).toLocaleUpperCase(),
+            createdAt: null,
+            paymentDue: null,
+            description: null,
+            paymentTerms: null,
+            clientName: null,
+            clientEmail: null,
+            status: null,
+            senderAddress: {
+              street: null,
+              city: null,
+              postCode: null,
+              country: null,
+            },
+            clientAddress: {
+              street: null,
+              city: null,
+              postCode: null,
+              country: null,
+            },
+            items: [
+              {
+                id: "I-" + nanoid(4),
+                name: null,
+                quantity: null,
+                price: null,
+                total: null,
+              },
+            ],
+            total: null,
+          },
+        }
+      },
     },
     updateWorkingObject: (state, action) => {
       if (action.payload.TYPE === "NEW") {
         console.log("HERE IN NEW OBJ")
-        state.currInvoice = state.emptyInvoice
         state.currInvoice.id = action.payload.id
       } else if (action.payload.TYPE === "EDIT") {
         console.log("HERE IN EDIT OBJ")
-
-        state.currInvoice = state.invoices.filter((item) => {
-          if (item.id === state.currID) return item
-        })[0]
       }
     },
     updateInvoiceList: (state, action) => {
       state.invoices = action.payload
     },
-
     inputInvoiceUpdate: (state, action) => {
-      // console.log("Input Value Update")
       state.currInvoice = action.payload
     },
-    addItem: (state, action) => {
-      state.currInvoice.items.push(state.item)
+    // ++++
+    addItem: {
+      reducer(state, action: PayloadAction<Item>) {
+        state.currInvoice.items.push(action.payload)
+      },
+      prepare() {
+        return {
+          payload: {
+            id: "I-" + nanoid(4),
+            name: "",
+            quantity: null,
+            price: null,
+            total: null,
+          },
+        }
+      },
     },
+    // ++++
     deleteItem: (state, action) => {
-      state.currInvoice.items.splice(action.payload.itemNumber, 1)
+      state.currInvoice.items.filter((item) => item.id !== action.payload)
     },
+    // ????
     updateInvoiceInfo: (state, action) => {
       state.invoices = state.invoices.map((item) => {
         if (item.id === action.payload.id) {
@@ -134,6 +111,7 @@ export const dataSlice = createSlice({
       })
       state.currInvoice = action.payload
     },
+    // ????
     addInvoice: (state, action) => {
       state.invoices = state.invoices.map((item, index, arr) => {
         if (item.id === action.payload.id) {
@@ -148,31 +126,34 @@ export const dataSlice = createSlice({
         }
       })
     },
+    // ++++
     deleteInvoice: (state, action) => {
-      state.invoices = state.invoices.filter((item, index) => {
-        return item.id !== action.payload
-      })
-      // console.log(state.invoices)
-    },
-    getEditedObject: (state, action) => {
-      state.test = action.payload
+      state.invoices = state.invoices.filter(
+        (invoice) => invoice.id !== action.payload
+      )
     },
   },
 })
 
+export const invoices = (state: RootState) => state.data.invoices
+export const selectModalType = (state: RootState) => state.data.modalType
+
+export const selectItems = (state: RootState) => state.data.currInvoice?.items
+
+export const selectCurrentInvoice = (state: RootState) => state.data.currInvoice
+
 // Action creators are generated for each case reducer function
 export const {
-  setId,
   updateInvoiceList,
+  createNewModal,
   updateInvoiceInfo,
   inputInvoiceUpdate,
   addInvoice,
   deleteInvoice,
   updateWorkingObject,
   changeModalType,
-  getEditedObject,
   deleteItem,
   addItem,
-} = dataSlice.actions
+} = dataReducer.actions
 
-export default dataSlice.reducer
+export default dataReducer.reducer

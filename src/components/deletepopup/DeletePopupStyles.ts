@@ -1,6 +1,10 @@
 import styled from "styled-components"
 
-export const Container = styled.div`
+interface Props {
+  isOpen?: boolean
+}
+
+export const Container = styled.div<Props>`
   position: absolute;
   display: ${(props) => (props.isOpen ? "flex" : "none")};
   flex-direction: column;

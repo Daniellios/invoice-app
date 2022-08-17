@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react"
 import { TermDiv, TermList, TermOption } from "./DropdownStyles"
 import { ArrowImg } from "../../styles/repeatables"
 import { useSelector, useDispatch } from "react-redux"
-import { inputInvoiceUpdate } from "../../store/slices/dataSlice"
+import {
+  inputInvoiceUpdate,
+  selectCurrentInvoice,
+} from "../../store/slices/dataSlice"
 
-const Dropdown = ({ value, name }) => {
-  const invoice = useSelector((state) => state.currData.currInvoice)
-  const newInv = useSelector((state) => state.currData.emptyInvoice)
+const Dropdown = ({ value }) => {
+  const invoice = useSelector(selectCurrentInvoice)
   const dispatch = useDispatch()
   const [currValue, setCurrValue] = useState(value)
   const [defaultValue, setDefValue] = useState("Net 30 days")
@@ -24,9 +26,9 @@ const Dropdown = ({ value, name }) => {
     setIsOpen((wasOpened) => !wasOpened)
   }
 
-  const chooseValue = (num) => {
+  const chooseValue = (num: number) => {
     setCurrValue(+num)
-    dispatch(inputInvoiceUpdate({ ...newInv, paymentTerms: num }))
+    dispatch(inputInvoiceUpdate({ ...invoice, paymentTerms: num }))
   }
 
   return (

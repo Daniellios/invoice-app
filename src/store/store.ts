@@ -1,16 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit"
 
-import dataSlice from "./slices/dataSlice"
-import statusSlice from "./slices/filterSlice"
-import modalSlice from "./slices/modalSlice"
-import themeSlice from "./slices/themeSwitch"
+import dataReducer from "./slices/dataSlice"
+import filterReducer from "./slices/filterSlice"
+import modalsReducer from "./slices/modalSlice"
+import themeReducer from "./slices/themeSwitch"
 
 export const store = configureStore({
   reducer: {
-    themeToggle: themeSlice,
-    statusToggle: statusSlice,
-    modalInvoice: modalSlice,
-    currData: dataSlice,
+    theme: themeReducer,
+    filter: filterReducer,
+    modals: modalsReducer,
+    data: dataReducer,
   },
 })
 

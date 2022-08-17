@@ -92,7 +92,7 @@ export const InvBoxChecks = styled.div`
   padding-left: 1.5rem;
   user-select: none;
   ${(props) =>
-    useSelector((state) => state.themeToggle.value)
+    useSelector((state) => state.theme.value)
       ? `
   -webkit-box-shadow: 0px 7px 9px 4px rgba(146, 119, 255, 0.3);
   -moz-box-shadow: 0px 7px 9px 4px rgba(146, 119, 255, 0.3);

@@ -1,40 +1,41 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
+import { RootState } from "../store"
 
 export interface ModalState {
   isModalOpen: boolean
-  isPopupOpen: boolean
+  isDeletePopupOpen: boolean
   isFilterOpen: boolean
-  modalType: string
 }
 
 const initialState: ModalState = {
   isModalOpen: false,
-  isPopupOpen: false,
+  isDeletePopupOpen: false,
   isFilterOpen: false,
-  modalType: "NEW",
 }
 
-export const modalSlice = createSlice({
-  name: "modalSlice",
+export const modalsReducer = createSlice({
+  name: "modalsReducer",
   initialState,
   reducers: {
     openModal: (state, action) => {
       state.isModalOpen = action.payload
     },
-    openPopup: (state, action) => {
-      state.isPopupOpen = action.payload
+    openDeletePopup: (state, action) => {
+      state.isDeletePopupOpen = action.payload
     },
     toggleFilter: (state, action) => {
       state.isFilterOpen = action.payload
     },
-    setModalType: (state, action) => {
-      state.modalType = action.payload
-    },
   },
 })
 
-// Action creators are generated for each case reducer function
-export const { openModal, openPopup, toggleFilter, setModalType } =
-  modalSlice.actions
+export const filterModalStatus = (state: RootState) => state.modals.isFilterOpen
+export const modalStatus = (state: RootState) => state.modals.isModalOpen
+export const deleteModalStatus = (state: RootState) =>
+  state.modals.isDeletePopupOpen
 
-export default modalSlice.reducer
+// Action creators are generated for each case reducer function
+export const { openModal, openDeletePopup, toggleFilter } =
+  modalsReducer.actions
+
+export default modalsReducer.reducer

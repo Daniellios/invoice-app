@@ -1,7 +1,10 @@
 import { store } from "../store/store"
 
-import { openModal, openPopup, toggleFilter } from "../store/slices/modalSlice"
-import { updateInvoiceInfo } from "../store/slices/dataSlice"
+import {
+  openModal,
+  openDeletePopup,
+  toggleFilter,
+} from "../store/slices/modalSlice"
 
 // MODAL OPEN - CLOSE
 export const modalOpener = () => {
@@ -13,7 +16,7 @@ export const modalCoser = () => {
 
 // DELETE POUPUP OPEN - CLOSE
 export const deletePopupOpener = () => {
-  store.dispatch(openPopup(true))
+  store.dispatch(openDeletePopup(true))
 }
 
 export const deletePopupCloser = () => {
@@ -22,7 +25,7 @@ export const deletePopupCloser = () => {
 
 // FILTER TOGGLE
 export const filterToggle = () => {
-  const filterVisibility = store.getState().modalInvoice.isFilterOpen
+  const filterVisibility = store.getState().modals.isFilterOpen
   store.dispatch(toggleFilter(!filterVisibility))
 }
 

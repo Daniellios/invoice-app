@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/router"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import {
   Container,
@@ -30,7 +29,6 @@ import {
 import { transformDate } from "../../helpers/dateFormatter"
 import { useSelector, useDispatch } from "react-redux"
 import { formatMoney } from "../../helpers/moneyFormatter"
-
 import {
   ItemStatus,
   ItemStatusCircle,
@@ -39,62 +37,32 @@ import {
   ItemIdHash,
   ArrowImg,
 } from "../../styles/repeatables"
-import {
-  changeModalType,
-  getInitialData,
-  setCurrInvoice,
-  setId,
-  updateWorkingObject,
-} from "../../store/slices/dataSlice"
+import { invoices } from "../../store/slices/dataSlice"
 import FilterBox from "../filterbox/Filter"
 import { modalOpener, filterToggle } from "../../utils/dispatchFunctions"
+import { selectFilterStatus } from "../../store/slices/filterSlice"
+import { filterModalStatus } from "../../store/slices/modalSlice"
+import { Invoice } from "../../types/interfaces"
 
-const Content = (props) => {
+const Content = () => {
   const dispatch = useDispatch()
-  const [invoiceList, setInvoceList] = useState(
-    useSelector((state) => state.currData.invoices)
-  )
-  const filterVisibility = useSelector(
-    (state) => state.modalInvoice.isFilterOpen
-  )
+  const invoiceListData = useSelector(invoices)
+  const [invoiceList, setInvoceList] = useState(invoiceListData)
 
-  const currentInvoiceList = useSelector((state) => state.currData.invoices)
-  const filterStatus = useSelector((state) => state.statusToggle.value)
+  const filterModalVisibility = useSelector(filterModalStatus)
 
-  // Local storage update
-  useEffect(() => {
-    if (invoiceList.length > 100) return
-    localStorage.setItem("invoices", JSON.stringify(invoiceList))
-  }, [invoiceList])
-
-  console.log(currentInvoiceList)
+  const filterStatus = useSelector(selectFilterStatus)
 
   // Filter Update
   useEffect(() => {
-    const filterStatusArr = Object.values(filterStatus)
-    if (filterStatusArr.every((item) => !item)) {
-      setInvoceList(currentInvoiceList)
+    if (filterStatus.every((item) => !item[1])) {
+      setInvoceList(invoiceListData)
     } else {
-      const filteredList = []
-      currentInvoiceList.filter((inv, index) => {
-        if (filterStatus[inv.status]) {
-          filteredList.push(inv)
-        }
-      })
-      setInvoceList(filteredList)
+      // const filteredList = []
+      setInvoceList(invoiceListData.filter((inv) => filterStatus[inv.status]))
+      // setInvoceList(filteredList)
     }
-  }, [filterStatus, currentInvoiceList])
-
-  // const createNewInvoice = () => {
-  //   dispatch(changeModalType("NEW"))
-  //   dispatch(updateWorkingObject("NEW"))
-  //   dispatch(setId())
-  //   modalOpener()
-  // }
-
-  const chooseInvoice = (id) => {
-    dispatch(setId(id))
-  }
+  }, [filterStatus, invoiceListData])
 
   return (
     <Container>
@@ -111,11 +79,11 @@ const Content = (props) => {
           <InvStatusSpan onClick={filterToggle}>
             Filter by status
             <ArrowImg
-              isOpen={filterVisibility}
+              isOpen={filterModalVisibility}
               src={"/assets/icon-arrow-down.svg"}
             />
           </InvStatusSpan>
-          {filterVisibility && <FilterBox />}
+          {filterModalVisibility && <FilterBox />}
           <Button onClick={modalOpener} newInvoice>
             <PlusDiv>
               <PlusIcon src={"/assets/icon-plus.svg"} />
@@ -127,14 +95,14 @@ const Content = (props) => {
 
       <InvBucketContainer>
         {invoiceList.length > 0 ? (
-          invoiceList.map((item, index) => (
+          invoiceList.map((item: Invoice) => (
             <Link
               href={{
                 pathname: `/invoice/${encodeURIComponent(item.id)}`,
               }}
-              key={index}
+              key={item.id}
             >
-              <InvBucketItem onClick={() => chooseInvoice(item.id)}>
+              <InvBucketItem>
                 <ItemId>
                   <ItemIdHash>#</ItemIdHash>
                   {item.id}

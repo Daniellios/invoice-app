@@ -267,7 +267,7 @@ export const AddItem = styled.button`
   display: flex;
   align-items: center;
   width: 100%;
-  align-text: center;
+  text-align: center;
   background: ${(props) => props.theme.invoiceBg};
   color: ${(props) => props.theme.mainText};
 

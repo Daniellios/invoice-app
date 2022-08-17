@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { ThemeProvider } from "styled-components"
 import theme from "../themes/default"
@@ -8,7 +7,7 @@ const Theme = ({ children }) => {
   return (
     <ThemeProvider
       theme={
-        useSelector((state) => state.themeToggle.value)
+        useSelector((state) => state.theme.value)
           ? theme.lightTheme
           : theme.darkTheme
       }

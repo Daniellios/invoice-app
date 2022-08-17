@@ -1,15 +1,6 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react"
+import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  updateInvoiceInfo,
-  inputInvoiceUpdate,
-  getEditedObject,
-} from "../../store/slices/dataSlice"
+import { inputInvoiceUpdate } from "../../store/slices/dataSlice"
 import {
   ModalInput,
   ModalInputWrap,
@@ -17,7 +8,7 @@ import {
   ModalInputMistake,
 } from "./InvoiceModalStyles"
 
-import { set, has } from "lodash"
+import { set } from "lodash"
 
 const InvoiceInput = ({
   value,
@@ -32,10 +23,10 @@ const InvoiceInput = ({
   handleTotal,
   big,
 }) => {
-  const newInv = useSelector((state) => state.currData.currInvoice)
+  const newInv = useSelector((state) => state.data.currInvoice)
   const [mistake, setMistake] = useState(false)
   const dispatch = useDispatch()
-  const copiedObject = JSON.parse(JSON.stringify(newInv))
+  // const copiedObject = JSON.parse(JSON.stringify(newInv))
 
   const handleChange = (e) => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/

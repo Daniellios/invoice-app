@@ -1,28 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { RootState } from "../store"
 
 export interface FilterState {
-  value: object
+  draft: boolean
+  paid: boolean
+  pending: boolean
 }
 
 const initialState: FilterState = {
-  value: {
-    draft: false,
-    paid: false,
-    pending: false,
-  },
+  draft: false,
+  paid: false,
+  pending: false,
 }
 
-export const statusSlice = createSlice({
-  name: "InvoiceFilter",
+export const filterReducer = createSlice({
+  name: "filterReducer",
   initialState,
   reducers: {
     setFilterStatus: (state, action) => {
-      state.value = action.payload
+      state = action.payload
     },
   },
 })
 
-// Action creators are generated for each case reducer function
-export const { setFilterStatus } = statusSlice.actions
+export const selectFilterStatus = (state: RootState) =>
+  Object.entries(state.filter)
 
-export default statusSlice.reducer
+// Action creators are generated for each case reducer function
+export const { setFilterStatus } = filterReducer.actions
+
+export default filterReducer.reducer

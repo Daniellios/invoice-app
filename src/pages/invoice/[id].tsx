@@ -1,21 +1,37 @@
 import { useRouter } from "next/router"
-import React, { FunctionComponent } from "react"
-import Layout from "../../layout/Layout"
-import { NextPage } from "next"
-
+import React from "react"
 import Invoice from "../../components/invoiceinfo/Invoice"
-import { useSelector } from "react-redux"
+import { store } from "../../store/store"
 
-const InvoicePage: NextPage = () => {
-  const invoiceID = useSelector((state: any) => state.currData.currInvoice)
+const data = store.getState().data.invoices
+
+export async function getStaticPaths() {
+  const paths = data.map((invoice) => {
+    return {
+      params: { id: invoice.id },
+    }
+  })
+
+  return {
+    paths,
+    fallback: false,
+  }
+}
+
+export const getStaticProps = async (context: any) => {
+  const id = context.params.id
+  const invDATA = data.filter((inv) => inv.id === id)[0]
+
+  return {
+    props: { invoice: invDATA },
+  }
+}
+
+const InvoicePage = ({ invoice }) => {
   const router = useRouter()
   const data = router.query
 
-  return (
-    <Layout>
-      <Invoice id={invoiceID?.id}></Invoice>
-    </Layout>
-  )
+  return <Invoice invoiceInfo={invoice}></Invoice>
 }
 
 export default InvoicePage

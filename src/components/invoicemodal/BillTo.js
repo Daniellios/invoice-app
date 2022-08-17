@@ -4,7 +4,7 @@ import InvoiceInput from "./InvoiceInput"
 import { useSelector } from "react-redux"
 
 const BillTo = ({ modalState, addressInfo }) => {
-  const invoice = useSelector((state) => state.currData.currInvoice)
+  const invoice = useSelector((state) => state.data.currInvoice)
   return (
     <ModalBlock billTo key={"bt"}>
       <ModalBlockTitle>Bill To</ModalBlockTitle>

@@ -14,15 +14,13 @@ import {
 } from "./HeaderStyles"
 import { useSelector, useDispatch } from "react-redux"
 import { toggle } from "../../store/slices/themeSwitch"
-import { openModal } from "../../store/slices/modalSlice"
-import useClickOutside from "../../hooks/clickOutsideHook"
 
 import { BsFillSunFill } from "react-icons/bs"
 import { IoMoon } from "react-icons/io5"
 import { IconWrap } from "../../styles/repeatables"
 
-const Header = (props) => {
-  const theme = useSelector((state) => state.themeToggle.value)
+const Header = () => {
+  const theme = useSelector((state) => state.theme.value)
   const dispatch = useDispatch()
 
   const handleTheme = () => {

@@ -1,7 +1,11 @@
 import { rgba } from "polished"
 import styled from "styled-components"
 
-export const TermList = styled.ul`
+interface Props {
+  isOpened?: boolean
+}
+
+export const TermList = styled.ul<Props>`
   width: inherit;
   position: absolute;
   top: 3.6rem;

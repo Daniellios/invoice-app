@@ -1,6 +1,9 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setFilterStatus } from "../../store/slices/filterSlice"
+import {
+  selectFilterStatus,
+  setFilterStatus,
+} from "../../store/slices/filterSlice"
 
 import {
   InvBoxChecks,
@@ -12,23 +15,22 @@ import {
 
 const FilterBox = () => {
   const dispatch = useDispatch()
-  const [boxStatus, setBoxStatus] = useState(
-    useSelector((state) => state.statusToggle.value)
-  )
 
-  const filterArr = Object.entries(boxStatus)
+  const filterStatus = useSelector(selectFilterStatus)
+
   const handleClick = (currBox) => {
-    const currBoxState = {
-      ...boxStatus,
-      [currBox[0]]: !currBox[1],
-    }
-    setBoxStatus(currBoxState)
-    dispatch(setFilterStatus(currBoxState))
+    dispatch(
+      setFilterStatus({
+        ...filterStatus,
+        [currBox[0]]: !currBox[1],
+      })
+    )
   }
+  console.log(filterStatus)
 
   return (
     <InvBoxChecks>
-      {filterArr.map((box, index) => (
+      {filterStatus.map((box, index) => (
         <InvCheckBoxPair key={index}>
           <InvCheckBoxCont onClick={() => handleClick(box)} Checked={box[1]}>
             <InvCheckBoxIcon Checked={box[1]} src={"/assets/icon-check.svg"} />
