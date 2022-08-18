@@ -44,6 +44,8 @@ import { selectFilterStatus } from "../../store/slices/filterSlice"
 import { filterModalStatus } from "../../store/slices/modalSlice"
 import { Invoice } from "../../types/interfaces"
 
+import { invoiceListCounter } from "../../helpers/invoiceListCounter"
+
 const Content = () => {
   const dispatch = useDispatch()
   const invoiceListData = useSelector(invoices)
@@ -55,12 +57,10 @@ const Content = () => {
 
   // Filter Update
   useEffect(() => {
-    if (filterStatus.every((item) => !item[1])) {
+    if (Object.entries(filterStatus).every((item) => !item[1])) {
       setInvoceList(invoiceListData)
     } else {
-      // const filteredList = []
       setInvoceList(invoiceListData.filter((inv) => filterStatus[inv.status]))
-      // setInvoceList(filteredList)
     }
   }, [filterStatus, invoiceListData])
 
@@ -69,11 +69,7 @@ const Content = () => {
       <InvFilterContainer>
         <InvTitleWrap>
           <InvTitle>Invoices</InvTitle>
-          <InvSpan>
-            {invoiceList.length > 0
-              ? `${invoiceList.length} invoices`
-              : `No Invoices`}
-          </InvSpan>
+          <InvSpan>{invoiceListCounter(invoiceList.length)}</InvSpan>
         </InvTitleWrap>
         <InvButtonsContainer>
           <InvStatusSpan onClick={filterToggle}>

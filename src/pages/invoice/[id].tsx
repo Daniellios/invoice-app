@@ -1,11 +1,12 @@
 import { useRouter } from "next/router"
 import React from "react"
+import { useDispatch } from "react-redux"
 import Invoice from "../../components/invoiceinfo/Invoice"
 import { store } from "../../store/store"
 
 const data = store.getState().data.invoices
 
-export async function getStaticPaths() {
+export const getStaticPaths = async () => {
   const paths = data.map((invoice) => {
     return {
       params: { id: invoice.id },
@@ -30,6 +31,7 @@ export const getStaticProps = async (context: any) => {
 const InvoicePage = ({ invoice }) => {
   const router = useRouter()
   const data = router.query
+  console.log("STORE LOADED")
 
   return <Invoice invoiceInfo={invoice}></Invoice>
 }

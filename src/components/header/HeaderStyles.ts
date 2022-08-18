@@ -25,17 +25,6 @@ export const Container = styled.div`
     border-radius: 0;
     height: 72px;
   }
-
-  // @media ${(props) => props.theme.breakpoints.md} {
-  //   max-width: unset;
-  //   max-height: 5rem;
-  //   min-width: 375px;
-  //   width: 100%;
-  //   grid-column: 1/ -1;
-  //   flex-direction: row;
-  //   border-radius: 0;
-  //   height: 72px;
-  // }
 `
 
 export const SquareWrap = styled.div`
@@ -148,13 +137,6 @@ export const ProfileContainer = styled.div`
     border-left: 1px solid #494e6e;
     padding: 0 0 0 1.5rem;
   }
-
-  // @media ${(props) => props.theme.breakpoints.md} {
-  //   height: 100%;
-  //   border-top: none;
-  //   border-left: 1px solid #494e6e;
-  //   padding: 0 0 0 1.5rem;
-  // }
 `
 
 export const ProfilePic = styled.img`
@@ -162,5 +144,3 @@ export const ProfilePic = styled.img`
   width: 40px;
   height: 40px;
 `
-
-export const MoonIcon = styled.img``

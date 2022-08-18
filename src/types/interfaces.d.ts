@@ -1,4 +1,4 @@
-interface AddressInfo {
+export interface AddressInfo {
   street: string
   city: string
   postCode: string

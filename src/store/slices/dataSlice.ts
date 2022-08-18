@@ -66,13 +66,10 @@ export const dataReducer = createSlice({
         }
       },
     },
-    updateWorkingObject: (state, action) => {
-      if (action.payload.TYPE === "NEW") {
-        console.log("HERE IN NEW OBJ")
-        state.currInvoice.id = action.payload.id
-      } else if (action.payload.TYPE === "EDIT") {
-        console.log("HERE IN EDIT OBJ")
-      }
+    setCurrentInvoice: (state, action) => {
+      state.currInvoice = state.invoices.filter(
+        (invoice: Invoice) => invoice.id === action.payload
+      )[0]
     },
     updateInvoiceList: (state, action) => {
       state.invoices = action.payload
@@ -136,6 +133,7 @@ export const dataReducer = createSlice({
 })
 
 export const invoices = (state: RootState) => state.data.invoices
+
 export const selectModalType = (state: RootState) => state.data.modalType
 
 export const selectItems = (state: RootState) => state.data.currInvoice?.items
@@ -148,9 +146,9 @@ export const {
   createNewModal,
   updateInvoiceInfo,
   inputInvoiceUpdate,
+  setCurrentInvoice,
   addInvoice,
   deleteInvoice,
-  updateWorkingObject,
   changeModalType,
   deleteItem,
   addItem,

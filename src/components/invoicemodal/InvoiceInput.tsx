@@ -1,6 +1,9 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { inputInvoiceUpdate } from "../../store/slices/dataSlice"
+import {
+  inputInvoiceUpdate,
+  selectCurrentInvoice,
+} from "../../store/slices/dataSlice"
 import {
   ModalInput,
   ModalInputWrap,
@@ -9,24 +12,23 @@ import {
 } from "./InvoiceModalStyles"
 
 import { set } from "lodash"
+import { InputProps } from "../../types/componentProps"
 
 const InvoiceInput = ({
   value,
-  onChangeHandle,
   area,
   initialState,
   format,
   name,
   title,
   itemInput,
-  onCustomSubmit,
   handleTotal,
   big,
-}) => {
-  const newInv = useSelector((state) => state.data.currInvoice)
+}: InputProps) => {
+  const newInv = useSelector(selectCurrentInvoice)
   const [mistake, setMistake] = useState(false)
   const dispatch = useDispatch()
-  // const copiedObject = JSON.parse(JSON.stringify(newInv))
+  const copiedObject = JSON.parse(JSON.stringify(newInv))
 
   const handleChange = (e) => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
@@ -42,7 +44,6 @@ const InvoiceInput = ({
     set(copiedObject, key, value)
     dispatch(inputInvoiceUpdate(copiedObject))
     if (title) {
-      handleTotal(copiedObject.items)
     }
   }
 

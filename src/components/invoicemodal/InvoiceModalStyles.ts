@@ -1,7 +1,23 @@
 import { rem, rgba, lighten } from "polished"
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
-export const Modal = styled.div`
+interface Props {
+  isOpen?: boolean
+  billFrom?: boolean
+  billTo?: boolean
+  dates?: boolean
+  LIST?: boolean
+  titleRow?: boolean
+  gridArea?: string
+  area?: string
+  itemWrap?: boolean
+  mistake?: boolean
+  rowTitle?: boolean
+  itemTitle?: boolean
+  big?: boolean
+}
+
+export const Modal = styled.div<Props>`
   position: absolute;
   z-index: 14;
   width: 719px;
@@ -33,6 +49,10 @@ export const Modal = styled.div`
   transform: ${(props) =>
     props.isOpen ? "translateX(0%)" : "translateX(-100%)"};
 
+  @media ${(props) => props.theme.breakpoints.lg} {
+    margin-top: 4rem;
+  }
+
   @media ${(props) => props.theme.breakpoints.md} {
     width: 616px;
     height: 100%;
@@ -62,7 +82,7 @@ export const ModalTitle = styled.h1`
   color: ${(props) => props.theme.mainText};
 `
 
-export const ModalBlock = styled.div`
+export const ModalBlock = styled.div<Props>`
   width: 100%;
   display: grid;
   row-gap: 1.5rem;
@@ -130,7 +150,7 @@ export const ModalBlock = styled.div`
       grid-template-columns: repeat(1, 1fr);
     }
     `
-    } else if (props.list) {
+    } else if (props.LIST) {
       return `
       grid-template-columns: 1fr ;
       grid-template-rows: auto;
@@ -140,7 +160,7 @@ export const ModalBlock = styled.div`
   }}
 `
 
-export const ModalRow = styled.div`
+export const ModalRow = styled.div<Props>`
   grid-area: auto/1/auto/1;
   grid-template-columns: 1fr 40px 40px 46px 100px 1fr;
   grid-template-areas: "ItmN ItmN ItmN QTY Price Total";
@@ -160,7 +180,7 @@ export const ModalRow = styled.div`
   }
 `
 
-export const RowCell = styled.div`
+export const RowCell = styled.div<Props>`
   width: 100%;
   display: flex;
   grid-area: ${(props) => props.gridArea};
@@ -179,7 +199,7 @@ export const ItemListTitle = styled.h2`
   color: ${(props) => props.theme.subText2};
 `
 
-export const ModalInputWrap = styled.div`
+export const ModalInputWrap = styled.div<Props>`
   position: relative;
   grid-area: ${(props) => props.gridArea};
   display: flex;
@@ -206,7 +226,7 @@ export const ModalInputWrap = styled.div`
       : ""}
 `
 
-export const ModalInputTitle = styled.p`
+export const ModalInputTitle = styled.p<Props>`
   color: ${(props) => props.theme.subText1};
   grid-area: ${(props) => props.area};
   display: ${(props) => (props.itemTitle ? "none" : "")};
@@ -225,7 +245,7 @@ export const ModalInputMistake = styled.p`
   right: 0;
 `
 
-export const TotalSumCell = styled.div`
+export const TotalSumCell = styled.div<Props>`
   display: flex;
   grid-area: ${(props) => props.area};
   justify-content: space-between;
@@ -241,7 +261,7 @@ export const TotalSumCell = styled.div`
   }
 `
 
-export const ModalInput = styled.input`
+export const ModalInput = styled.input<Props>`
   outline: none;
   width: 100%;
   grid-area: ${(props) => props.area};
@@ -249,7 +269,7 @@ export const ModalInput = styled.input`
   color: ${(props) => props.theme.mainText};
   border: 1px solid ${(props) => rgba(props.theme.checkBg, 0.05)};
   font-family: ${(props) => props.theme.fonts.title};
-  padding: ${(props) => (props.big === true ? "0 .5rem" : "0 1rem")};
+  padding: ${(props) => (props.big ? "0 .5rem" : "0 1rem")};
   border-radius: 3px;
   height: 3rem;
 
@@ -262,7 +282,7 @@ export const ModalInput = styled.input`
   }
 `
 
-export const AddItem = styled.button`
+export const AddItem = styled.button<Props>`
   grid-area: ${(props) => props.area};
   display: flex;
   align-items: center;

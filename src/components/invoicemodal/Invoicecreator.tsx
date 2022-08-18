@@ -29,22 +29,22 @@ import InvoiceInput from "./InvoiceInput"
 import {
   addItem,
   deleteItem,
-  updateWorkingObject,
   updateInvoiceInfo,
   changeModalType,
   invoices,
   selectModalType,
   selectItems,
   createNewModal,
+  selectCurrentInvoice,
+  setCurrentInvoice,
 } from "../../store/slices/dataSlice"
 
 import useOnClickOutside from "../../hooks/useClickOutsideHook"
 import BillFrom from "./BillFrom"
-
 import BillTo from "./BillTo"
-
 import { modalCoser, modalOpener } from "../../utils/dispatchFunctions"
 import { modalStatus } from "../../store/slices/modalSlice"
+import { Item } from "../../types/interfaces"
 
 const Invoicecreator = () => {
   const dispatch = useDispatch()
@@ -57,8 +57,11 @@ const Invoicecreator = () => {
   const modalREF = useRef()
 
   const router = useRouter()
-  const invoice = useSelector((state) => state.data.currInvoice)
+  const invoice = useSelector(selectCurrentInvoice)
   const invoicesLIST = useSelector(invoices)
+
+  console.log(invoice)
+  console.log(router)
 
   const [itemList, setItemList] = useState([])
 
@@ -70,35 +73,32 @@ const Invoicecreator = () => {
   }, [invoice])
 
   // REMOVE ITEM FROM
-  const removeItem = (itemNumber) => {
-    const newList = itemList.filter((item, index) => index !== itemNumber)
-    dispatch(deleteItem({ type: modalType, itemNumber: itemNumber }))
-    setItemList(newList)
+  const removeItem = (itemID: string) => {
+    // const newList = itemList.filter((item: Item) => item.id !== itemID)
+    dispatch(deleteItem(itemID))
   }
 
   //  UPDATE OBJECT ON NEW INVOICE
   const newModalSetup = () => {
     console.log("NEW SETUP")
     dispatch(createNewModal())
-    // dispatch(updateWorkingObject({ TYPE: "NEW", id: randomIdGenerator() }))
+    dispatch(changeModalType("NEW"))
   }
 
   //  UPDATE OBJECT ON EDIT INVOICE
   const editModalSetup = () => {
     console.log("EDIT SETUP")
-    dispatch(changeModalType("NEW"))
-    dispatch(updateWorkingObject({ TYPE: "EDIT" }))
+    dispatch(changeModalType("EDIT"))
   }
 
   /// Set EDIT modal or NEW one
   useEffect(() => {
-    console.log("rendered")
+    dispatch(setCurrentInvoice(router.query?.id))
+    // console.log("rendered")
     modalCoser()
     if (router.pathname === "/") {
-      console.log("called")
       newModalSetup()
     } else if (router.pathname === "/invoice/[id]") {
-      console.log("called")
       editModalSetup()
     }
   }, [router.pathname])
@@ -157,18 +157,19 @@ const Invoicecreator = () => {
           <ModalInputWrap gridArea={"term"}>
             <ModalInputTitle>Payment terms</ModalInputTitle>
             <ModalInputMistake>Mistake</ModalInputMistake>
-            <Dropdown value={invoice?.paymentTerms} name={"paymentTerms"} />
+            <Dropdown value={invoice?.paymentTerms} />
           </ModalInputWrap>
           <InvoiceInput
             area={"pd"}
             value={invoice?.description}
             initialState={modalType}
             name={"description"}
+            format={"text"}
             title={"Project Description"}
           />
         </ModalBlock>
         {/* ITEMS */}
-        <ModalBlock list={"true"} key={"itms"}>
+        <ModalBlock LIST key={"itms"}>
           <ItemListTitle>Item List</ItemListTitle>
           <ModalRow titleRow>
             <ModalInputTitle rowTitle area={"ItmN"}>
@@ -185,7 +186,7 @@ const Invoicecreator = () => {
             </ModalInputTitle>
           </ModalRow>
           {invoiceItems
-            ? invoiceItems.map((item, index) => {
+            ? invoiceItems.map((item: Item, index) => {
                 return (
                   <InvoiceItem
                     itemInfo={item}

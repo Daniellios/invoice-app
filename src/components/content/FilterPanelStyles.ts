@@ -1,5 +1,9 @@
 import styled from "styled-components"
-import { useSelector } from "react-redux"
+
+interface Props {
+  Checked?: boolean
+  THEME?: number
+}
 
 export const Container = styled.div`
   grid-area: c;
@@ -77,10 +81,9 @@ export const InvStatusSpan = styled.span`
 
 // CHECKBOXES
 
-export const InvBoxChecks = styled.div`
+export const InvBoxChecks = styled.div<Props>`
   position: absolute;
   display: flex;
-  // display: ${(props) => (props.isOpen ? "flex" : "none")};
   flex-direction: column;
   z-index: 10;
   align-items: start;
@@ -92,7 +95,7 @@ export const InvBoxChecks = styled.div`
   padding-left: 1.5rem;
   user-select: none;
   ${(props) =>
-    useSelector((state) => state.theme.value)
+    props.THEME
       ? `
   -webkit-box-shadow: 0px 7px 9px 4px rgba(146, 119, 255, 0.3);
   -moz-box-shadow: 0px 7px 9px 4px rgba(146, 119, 255, 0.3);
@@ -136,7 +139,7 @@ export const InvCheckBoxSpan = styled.span`
   text-transform: capitalize;
 `
 
-export const InvCheckBoxCont = styled.div`
+export const InvCheckBoxCont = styled.div<Props>`
   display: flex;
   border: 1px solid transparent;
   width: 1rem;
@@ -151,10 +154,11 @@ export const InvCheckBoxCont = styled.div`
       return props.theme.checkBg
     }
   }};
+  /* opacity: ${(props) => (props.Checked ? "0" : "1")}; */
   border-radius: 2px;
 `
 
-export const InvCheckBoxIcon = styled.img`
+export const InvCheckBoxIcon = styled.img<Props>`
   opacity: ${(props) => (props.Checked ? "1" : "0")};
 `
 

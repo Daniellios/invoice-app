@@ -18,13 +18,18 @@ export const filterReducer = createSlice({
   initialState,
   reducers: {
     setFilterStatus: (state, action) => {
-      state = action.payload
+      if (action.payload === "draft") {
+        state.draft = !state.draft
+      } else if (action.payload === "paid") {
+        state.paid = !state.paid
+      } else if (action.payload === "pending") {
+        state.pending = !state.pending
+      }
     },
   },
 })
 
-export const selectFilterStatus = (state: RootState) =>
-  Object.entries(state.filter)
+export const selectFilterStatus = (state: RootState) => state.filter
 
 // Action creators are generated for each case reducer function
 export const { setFilterStatus } = filterReducer.actions

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Button } from "../../styles/buttons"
 import { useRouter } from "next/router"
 
@@ -27,7 +27,7 @@ import {
   InvoiceTotal,
   ButtonsFooter,
   Separator,
-} from "../../components/invoiceinfo/InvoiceStyles"
+} from "./InvoiceStyles"
 
 import {
   ItemStatus,
@@ -42,7 +42,10 @@ import {
 import { transformDate } from "../../helpers/dateFormatter"
 import { getTotal } from "../../helpers/getTotalSum"
 import { useDispatch, useSelector } from "react-redux"
-import { updateInvoiceInfo } from "../../store/slices/dataSlice"
+import {
+  selectCurrentInvoice,
+  updateInvoiceInfo,
+} from "../../store/slices/dataSlice"
 
 import DeletePopup from "../deletepopup/DeletePopup"
 import { formatMoney } from "../../helpers/moneyFormatter"
@@ -51,19 +54,20 @@ import {
   deletePopupOpener,
   modalOpener,
 } from "../../utils/dispatchFunctions"
+import { Item } from "../../types/interfaces"
 
 const Invoice = ({ invoiceInfo }) => {
   const dispatch = useDispatch()
   const router = useRouter()
-  const invoice = useSelector((state) => state.data.currInvoice)
-
-  console.log(invoice)
+  // const invoice = useSelector(selectCurrentInvoice)
+  const [currStatus, setCurrStatus] = useState<string>(invoiceInfo.status)
 
   const goBack = () => {
     router.back()
   }
 
   const markAsPaid = () => {
+    setCurrStatus("paid")
     dispatch(updateInvoiceInfo({ ...invoiceInfo, status: "paid" }))
   }
 
@@ -77,9 +81,9 @@ const Invoice = ({ invoiceInfo }) => {
       <EditPanel>
         <StatusPanel>
           <StatusSpan>Status</StatusSpan>
-          <ItemStatus _STATUS={invoiceInfo.status}>
+          <ItemStatus _STATUS={currStatus}>
             <ItemStatusCircle />
-            <ItemStatusTitle>{invoiceInfo.status} </ItemStatusTitle>
+            <ItemStatusTitle>{currStatus} </ItemStatusTitle>
           </ItemStatus>
         </StatusPanel>
         <ButtonPanel>
@@ -104,10 +108,13 @@ const Invoice = ({ invoiceInfo }) => {
             </ItemId>
             <InvoiceSubTitle>{invoiceInfo.description}</InvoiceSubTitle>
           </InvoiceName>
+          {/* SENDER ADDRESS INFO */}
           <AddressInfoList sender>
-            {Object.values(invoiceInfo.senderAddress).map((value, index) => (
-              <ListItem key={index + value.at(0)}> {value}</ListItem>
-            ))}
+            {Object.values(invoiceInfo.senderAddress).map(
+              (value: string, index: number) => (
+                <ListItem key={index + value.at(0)}> {value}</ListItem>
+              )
+            )}
           </AddressInfoList>
         </InvoiceContentTop>
 
@@ -119,7 +126,7 @@ const Invoice = ({ invoiceInfo }) => {
                 {transformDate(invoiceInfo.createdAt)}
               </InvoiceStrongLine>
             </InvoiceDate>
-            <InvoiceDate due>
+            <InvoiceDate>
               <InvoiceSubTitle>Payment Due </InvoiceSubTitle>
               <InvoiceStrongLine>
                 {transformDate(invoiceInfo.paymentDue)}
@@ -128,13 +135,14 @@ const Invoice = ({ invoiceInfo }) => {
           </InvoiceDates>
           <InvoiceBillTo area={"BillTo"}>
             <InvoiceSubTitle>Bill to</InvoiceSubTitle>
-            <InvoiceStrongLine name="true">
-              {invoiceInfo.clientName}
-            </InvoiceStrongLine>
+            <InvoiceStrongLine NAME>{invoiceInfo.clientName}</InvoiceStrongLine>
+            {/* CLIENT ADDRESS INFO */}
             <AddressInfoList>
-              {Object.values(invoiceInfo.clientAddress).map((value, index) => (
-                <ListItem key={index + value.at(0)}> {value}</ListItem>
-              ))}
+              {Object.values(invoiceInfo.clientAddress).map(
+                (value: string, index: number) => (
+                  <ListItem key={index + value.at(0)}> {value}</ListItem>
+                )
+              )}
             </AddressInfoList>
           </InvoiceBillTo>
           <InvoiceEmail area={"Email"}>
@@ -159,9 +167,10 @@ const Invoice = ({ invoiceInfo }) => {
                 Total
               </InvoiceSubTitle>
             </InvoiceCartRow>
-            {invoiceInfo.items?.map((item, index) => {
+            {/* INVOICE ITEMS */}
+            {invoiceInfo.items?.map((item: Item) => {
               return (
-                <InvoiceCartRow key={index}>
+                <InvoiceCartRow key={item.id}>
                   <InvoiceSubTitle area={"ItmN"} cartItem>
                     {item.name}
                   </InvoiceSubTitle>

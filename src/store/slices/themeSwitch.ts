@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
+import { RootState } from "../store"
 
 export interface ThemeState {
   value: number
@@ -12,12 +13,13 @@ export const themeReducer = createSlice({
   name: "themeReducer",
   initialState,
   reducers: {
-    toggle: (state, action) => {
+    toggle: (state) => {
       state.value === 1 ? (state.value = 0) : (state.value = 1)
-      localStorage.setItem("theme", `${state.value}`)
     },
   },
 })
+
+export const selectThemeValue = (state: RootState) => state.theme.value
 
 // Action creators are generated for each case reducer function
 export const { toggle } = themeReducer.actions

@@ -10,17 +10,15 @@ import {
   ProfileContainer,
   SwitchContainer,
   ThemeSwither,
-  MoonIcon,
 } from "./HeaderStyles"
 import { useSelector, useDispatch } from "react-redux"
-import { toggle } from "../../store/slices/themeSwitch"
-
+import { selectThemeValue, toggle } from "../../store/slices/themeSwitch"
 import { BsFillSunFill } from "react-icons/bs"
 import { IoMoon } from "react-icons/io5"
 import { IconWrap } from "../../styles/repeatables"
 
 const Header = () => {
-  const theme = useSelector((state) => state.theme.value)
+  const theme = useSelector(selectThemeValue)
   const dispatch = useDispatch()
 
   const handleTheme = () => {
@@ -29,7 +27,7 @@ const Header = () => {
 
   useEffect(() => {
     localStorage.setItem("theme", JSON.stringify(theme))
-  }, [])
+  }, [theme])
 
   return (
     <Container>

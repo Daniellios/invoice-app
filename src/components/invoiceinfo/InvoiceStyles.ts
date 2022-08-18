@@ -1,6 +1,14 @@
-import { rem } from "polished"
 import styled from "styled-components"
-import { useSelector } from "react-redux"
+
+interface Props {
+  mobile?: boolean
+  sender?: boolean
+  area?: string
+  cartTitle?: boolean
+  cartItem?: boolean
+  NAME?: boolean
+  titleRow?: boolean
+}
 
 export const Container = styled.div`
   display: flex;
@@ -39,7 +47,7 @@ export const EditPanel = styled.div`
   height: 88px;
 `
 
-export const ButtonPanel = styled.div`
+export const ButtonPanel = styled.div<Props>`
   display: flex;
   align-items: center;
   column-gap: 10px;
@@ -114,7 +122,7 @@ export const InvoiceName = styled.div`
   }
 `
 
-export const AddressInfoList = styled.ul`
+export const AddressInfoList = styled.ul<Props>`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
@@ -149,7 +157,7 @@ export const InvoiceContentMiddle = styled.div`
   }
 `
 
-export const InvoiceDates = styled.div`
+export const InvoiceDates = styled.div<Props>`
   display: flex;
   grid-area: ${(props) => props.area};
   flex-direction: column;
@@ -167,7 +175,7 @@ export const InvoiceDate = styled.div`
   row-gap: 1rem;
 `
 
-export const InvoiceSubTitle = styled.p`
+export const InvoiceSubTitle = styled.p<Props>`
   text-transform: capitalize;
   font-weight: ${(props) =>
     props.cartTitle ? "300" : props.cartItem ? "500" : ""};
@@ -176,7 +184,7 @@ export const InvoiceSubTitle = styled.p`
   grid-area: ${(props) => props.area};
 `
 
-export const InvoiceBillTo = styled.div`
+export const InvoiceBillTo = styled.div<Props>`
   display: flex;
   grid-area: ${(props) => props.area};
   flex-direction: column;
@@ -184,11 +192,11 @@ export const InvoiceBillTo = styled.div`
   row-gap: 0.5rem;
 `
 
-export const InvoiceStrongLine = styled.h3`
-  margin: ${(props) => (props.name ? ".5rem 0" : "0")};
+export const InvoiceStrongLine = styled.h3<Props>`
+  margin: ${(props) => (props.NAME ? ".5rem 0" : "0")};
 `
 
-export const InvoiceEmail = styled.div`
+export const InvoiceEmail = styled.div<Props>`
   display: flex;
   grid-area: ${(props) => props.area};
   flex-direction: column;
@@ -236,7 +244,7 @@ export const InvoiceAmountDue = styled.div`
   padding: 2rem;
 `
 
-export const InvoiceCartRow = styled.div`
+export const InvoiceCartRow = styled.div<Props>`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-areas: "ItmN ItmN ItmN qty Price Total";
@@ -258,7 +266,7 @@ export const InvoiceCartRow = styled.div`
   }
 `
 
-export const Separator = styled.p`
+export const Separator = styled.p<Props>`
   display: none;
   align-items: center;
   justify-content: center;
@@ -284,9 +292,9 @@ export const ButtonsFooter = styled.div`
       display: inline-block;
       padding: 0 1rem;
       text-align: center;
+    }
   }
 `
-
 export const InvoiceTotal = styled.h2`
   font-size: 1.5rem;
 `

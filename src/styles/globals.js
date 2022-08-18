@@ -16,14 +16,10 @@ const GlobalStyles = createGlobalStyle`
     background-color:  ${(props) => props.theme.background};
     color: ${(props) => props.theme.mainText};
     cursor: default;
-    transition: all 0.40s linear;
-    transition-property: color, background, box-shadow;
     overflow-x: hidden;
+    min-width: 375px;
   }
-  div{
-    // transition:all 0.40s linear;
 
-  }
   h1,h2,h3,h4,h5,h6,button {
     font-family: ${(props) => props.theme.fonts.title};
     color: ${(props) => props.theme.mainText};
