@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux"
 import styled from "styled-components"
+import { RootState } from "../store/store"
 
 export const Container = styled.main`
   display: grid;
@@ -20,7 +21,8 @@ export const Container = styled.main`
 
   ${(props) =>
     useSelector(
-      (state) => state.modals.isModalOpen || state.modals.isDeletePopupOpen
+      (state: RootState) =>
+        state.modals.isModalOpen || state.modals.isDeletePopupOpen
     )
       ? ` &:after {
   width: 100%;

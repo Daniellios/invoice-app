@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components"
-import { useSelector } from "react-redux"
 import { lighten, darken } from "polished"
 
 interface Props {

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   inputInvoiceUpdate,
   selectCurrentInvoice,
+  selectModalType,
 } from "../../store/slices/dataSlice"
 import {
   ModalInput,
@@ -17,7 +18,6 @@ import { InputProps } from "../../types/componentProps"
 const InvoiceInput = ({
   value,
   area,
-  initialState,
   format,
   name,
   title,
@@ -25,6 +25,7 @@ const InvoiceInput = ({
   handleTotal,
   big,
 }: InputProps) => {
+  const modalType = useSelector(selectModalType)
   const newInv = useSelector(selectCurrentInvoice)
   const [mistake, setMistake] = useState(false)
   const dispatch = useDispatch()
@@ -52,7 +53,7 @@ const InvoiceInput = ({
       {itemInput ? (
         <ModalInput
           big={big}
-          defaultValue={initialState === "NEW" ? null : value}
+          defaultValue={modalType === "NEW" ? null : value}
           type={format || ""}
           onChange={handleChange}
           area={area}
@@ -64,7 +65,7 @@ const InvoiceInput = ({
           <ModalInputTitle>{title}</ModalInputTitle>
           <ModalInputMistake>Can't be empty</ModalInputMistake>
           <ModalInput
-            defaultValue={initialState === "NEW" ? null : value}
+            defaultValue={modalType === "NEW" ? null : value}
             type={format || ""}
             onChange={handleChange}
             name={name}

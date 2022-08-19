@@ -46,37 +46,22 @@ import { modalCoser, modalOpener } from "../../utils/dispatchFunctions"
 import { modalStatus } from "../../store/slices/modalSlice"
 import { Item } from "../../types/interfaces"
 
+import { columnNames } from "../../constants/columnNames"
+
 const Invoicecreator = () => {
   const dispatch = useDispatch()
   const modalIsOpen = useSelector(modalStatus)
-
   const modalType = useSelector(selectModalType)
-
   const invoiceItems = useSelector(selectItems)
 
   const modalREF = useRef()
-
   const router = useRouter()
   const invoice = useSelector(selectCurrentInvoice)
-  const invoicesLIST = useSelector(invoices)
 
   console.log(invoice)
   console.log(router)
 
-  const [itemList, setItemList] = useState([])
-
   useOnClickOutside(modalREF, () => modalCoser())
-
-  // UPDATE LIST ITEMS
-  useEffect(() => {
-    setItemList(invoice?.items)
-  }, [invoice])
-
-  // REMOVE ITEM FROM
-  const removeItem = (itemID: string) => {
-    // const newList = itemList.filter((item: Item) => item.id !== itemID)
-    dispatch(deleteItem(itemID))
-  }
 
   //  UPDATE OBJECT ON NEW INVOICE
   const newModalSetup = () => {
@@ -135,21 +120,14 @@ const Invoicecreator = () => {
           </ModalTitle>
         )}
         {/* Bill FROM  */}
-        <BillFrom
-          modalState={modalType}
-          addressInfo={invoice?.senderAddress}
-        ></BillFrom>
+        <BillFrom addressInfo={invoice?.senderAddress}></BillFrom>
         {/* Bill TO  */}
-        <BillTo
-          modalState={modalType}
-          addressInfo={invoice?.clientAddress}
-        ></BillTo>
+        <BillTo addressInfo={invoice?.clientAddress}></BillTo>
         {/* DATES */}
         <ModalBlock dates key={"dt"}>
           <InvoiceInput
             area={"invD"}
             value={invoice?.createdAt}
-            initialState={modalType}
             name={"createdAt"}
             format={"date"}
             title={"Invoice Date"}
@@ -162,7 +140,6 @@ const Invoicecreator = () => {
           <InvoiceInput
             area={"pd"}
             value={invoice?.description}
-            initialState={modalType}
             name={"description"}
             format={"text"}
             title={"Project Description"}
@@ -171,27 +148,24 @@ const Invoicecreator = () => {
         {/* ITEMS */}
         <ModalBlock LIST key={"itms"}>
           <ItemListTitle>Item List</ItemListTitle>
+          {/* TITLE ROW - COLUMN NAMES */}
           <ModalRow titleRow>
-            <ModalInputTitle rowTitle area={"ItmN"}>
-              Item name
-            </ModalInputTitle>
-            <ModalInputTitle rowTitle area={"QTY"}>
-              QTY
-            </ModalInputTitle>
-            <ModalInputTitle rowTitle area={"Price"}>
-              Price
-            </ModalInputTitle>
-            <ModalInputTitle rowTitle area={"Total"}>
-              Total
-            </ModalInputTitle>
+            {columnNames.map((column, index) => (
+              <ModalInputTitle
+                key={column.area + index}
+                rowTitle
+                area={column.area}
+              >
+                {column.title}
+              </ModalInputTitle>
+            ))}
           </ModalRow>
           {invoiceItems
-            ? invoiceItems.map((item: Item, index) => {
+            ? invoiceItems.map((item: Item, index: number) => {
                 return (
                   <InvoiceItem
                     itemInfo={item}
-                    onRemove={removeItem}
-                    key={index}
+                    key={item.id}
                     number={index}
                   ></InvoiceItem>
                 )

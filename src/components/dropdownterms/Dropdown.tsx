@@ -22,17 +22,13 @@ const Dropdown = ({ value }) => {
     if (currValue === 1) setDefValue("Net 1 Day")
   }, [currValue, setDefValue])
 
-  const openForm = () => {
-    setIsOpen((wasOpened) => !wasOpened)
-  }
-
   const chooseValue = (num: number) => {
     setCurrValue(+num)
     dispatch(inputInvoiceUpdate({ ...invoice, paymentTerms: num }))
   }
 
   return (
-    <TermDiv onClick={openForm}>
+    <TermDiv onClick={() => setIsOpen(!isOpen)}>
       {defaultValue}
       <TermList isOpened={isOpen}>
         {values.map((value, index) => {

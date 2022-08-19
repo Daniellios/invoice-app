@@ -1,7 +1,10 @@
 import React, { useState } from "react"
 import { BiTrash } from "react-icons/bi"
+import { useDispatch } from "react-redux"
 import { formatMoney } from "../../helpers/moneyFormatter"
+import { deleteItem } from "../../store/slices/dataSlice"
 import { IconWrap } from "../../styles/repeatables"
+import { InvoiceItemProps } from "../../types/componentProps"
 import InvoiceInput from "./InvoiceInput"
 
 import {
@@ -11,12 +14,10 @@ import {
   ModalInputTitle,
 } from "./InvoiceModalStyles"
 
-const InvoiceItem = ({ itemInfo, onRemove, number }) => {
-  // console.log(itemInfo.quantity, itemInfo.price)
-
+const InvoiceItem = ({ itemInfo, number }: InvoiceItemProps) => {
+  const dispatch = useDispatch()
   const [total, setTotal] = useState(0)
-
-  const handleTotal = (newValues) => {
+  const handleTotal = (newValues: number): void => {
     const { quantity, price } = newValues[number]
     const newTotal = quantity * price
     setTotal(formatMoney(newTotal))
@@ -24,7 +25,7 @@ const InvoiceItem = ({ itemInfo, onRemove, number }) => {
 
   // console.log(total)
   return (
-    <ModalRow number={number}>
+    <ModalRow>
       <ModalInputWrap itemWrap gridArea={"ItmN"}>
         <ModalInputTitle itemTitle>Item Name</ModalInputTitle>
         <InvoiceInput
@@ -60,7 +61,7 @@ const InvoiceItem = ({ itemInfo, onRemove, number }) => {
           {total || itemInfo?.total}
           <IconWrap trash>
             <BiTrash
-              onClick={() => onRemove(number)}
+              onClick={() => dispatch(deleteItem(itemInfo.id))}
               style={{ width: "16px", height: "16px", cursor: "pointer" }}
             />
           </IconWrap>

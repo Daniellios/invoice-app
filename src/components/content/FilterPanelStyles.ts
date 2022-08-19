@@ -67,7 +67,7 @@ export const InvButtonsContainer = styled.div`
   height: 100%;
 
   @media ${(props) => props.theme.breakpoints.mmd} {
-    column-gap: 1rem;
+    column-gap: 0.5rem;
   }
 `
 
@@ -80,7 +80,6 @@ export const InvStatusSpan = styled.span`
 `
 
 // CHECKBOXES
-
 export const InvBoxChecks = styled.div<Props>`
   position: absolute;
   display: flex;
@@ -154,7 +153,6 @@ export const InvCheckBoxCont = styled.div<Props>`
       return props.theme.checkBg
     }
   }};
-  /* opacity: ${(props) => (props.Checked ? "0" : "1")}; */
   border-radius: 2px;
 `
 

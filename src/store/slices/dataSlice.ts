@@ -96,7 +96,9 @@ export const dataReducer = createSlice({
     },
     // ++++
     deleteItem: (state, action) => {
-      state.currInvoice.items.filter((item) => item.id !== action.payload)
+      state.currInvoice.items = state.currInvoice.items.filter(
+        (item) => item.id !== action.payload
+      )
     },
     // ????
     updateInvoiceInfo: (state, action) => {
