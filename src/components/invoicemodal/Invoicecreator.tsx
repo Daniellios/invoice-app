@@ -28,10 +28,8 @@ import InvoiceItem from "./InvoiceItem"
 import InvoiceInput from "./InvoiceInput"
 import {
   addItem,
-  deleteItem,
   updateInvoiceInfo,
   changeModalType,
-  invoices,
   selectModalType,
   selectItems,
   createNewModal,
@@ -63,23 +61,22 @@ const Invoicecreator = () => {
 
   useOnClickOutside(modalREF, () => modalCoser())
 
-  //  UPDATE OBJECT ON NEW INVOICE
+  // SET ON NEW TYPE
   const newModalSetup = () => {
     console.log("NEW SETUP")
     dispatch(createNewModal())
     dispatch(changeModalType("NEW"))
   }
 
-  //  UPDATE OBJECT ON EDIT INVOICE
+  // SET ON EDIT TYPE
   const editModalSetup = () => {
     console.log("EDIT SETUP")
     dispatch(changeModalType("EDIT"))
   }
 
-  /// Set EDIT modal or NEW one
+  // UPDATE SETUP
   useEffect(() => {
     dispatch(setCurrentInvoice(router.query?.id))
-    // console.log("rendered")
     modalCoser()
     if (router.pathname === "/") {
       newModalSetup()
@@ -92,11 +89,12 @@ const Invoicecreator = () => {
     dispatch(addItem())
   }
 
+  //// WORK ON THIS
   const saveAsDraft = () => {
     console.log("saved as Draft")
     dispatch(updateInvoiceInfo({ ...invoice, status: "draft" }))
   }
-
+  //// WORK ON THIS
   const saveAndSend = () => {
     console.log("SAVED AND SENT")
     dispatch(updateInvoiceInfo({ ...invoice, status: "pending" }))
