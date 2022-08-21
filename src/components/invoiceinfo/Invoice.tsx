@@ -198,10 +198,12 @@ const Invoice = ({ invoiceInfo }) => {
         <Button onClick={modalOpener} darkgray>
           edit
         </Button>
-        <Button red onClick={deletePopupCloser}>
+        <Button red onClick={deletePopupOpener}>
           Delete
         </Button>
-        <Button purple>Mark As Paid </Button>
+        <Button onClick={markAsPaid} purple>
+          Mark As Paid
+        </Button>
       </ButtonsFooter>
     </Container>
   )

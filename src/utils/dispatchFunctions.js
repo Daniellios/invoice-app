@@ -20,7 +20,7 @@ export const deletePopupOpener = () => {
 }
 
 export const deletePopupCloser = () => {
-  store.dispatch(openPopup(false))
+  store.dispatch(openDeletePopup(false))
 }
 
 // FILTER TOGGLE
