@@ -87,13 +87,13 @@ const Invoice = ({ invoiceInfo }) => {
           </ItemStatus>
         </StatusPanel>
         <ButtonPanel>
-          <Button onClick={modalOpener} darkgray>
+          <Button key={"edit"} onClick={modalOpener} darkgray>
             edit
           </Button>
-          <Button onClick={deletePopupOpener} red>
+          <Button key={"delete"} onClick={deletePopupOpener} red>
             Delete
           </Button>
-          <Button purple onClick={markAsPaid}>
+          <Button key={"markPaid"} purple onClick={markAsPaid}>
             Mark As Paid
           </Button>
         </ButtonPanel>
